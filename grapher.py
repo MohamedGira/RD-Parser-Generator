@@ -78,7 +78,7 @@ def draw_graph(treedict,labe2l=None):
     
     return g
 
-def draw_graph_visualized(currentNode,treedict,labe2l=None,at=0):
+def draw_graph_visualized(currentNode,treedict,labe2l=None,at=0,fromedge='',previousnode=''):
    # Graphically represents the given ROBDD using graphviz.
     g = graphviz.Digraph(format='png')
     g.attr(rankdir='TB')
@@ -86,7 +86,7 @@ def draw_graph_visualized(currentNode,treedict,labe2l=None,at=0):
     g.graph_attr['fontname'] = 'Consolas'
     
     g.attr('node', shape='circle')
-    s='\l'+'_'*at+'^'+'_'*(len(labe2l)-at-1)
+    s='\l'+'_'*at+'^'+'_'*(len(labe2l)-at)
     if labe2l:
       g.attr(label=labe2l+s)
     drawn_nodes=[]
@@ -114,7 +114,10 @@ def draw_graph_visualized(currentNode,treedict,labe2l=None,at=0):
       for key in nodedict[node]:
         value=nodedict[node][key]
         for i in value:
-          g.edge(str(id(node)), str(id(key)),label=str(i))
+          if(node==previousnode and i==fromedge and key==currentNode):
+            g.edge(str(id(node)), str(id(key)),label=str(i),color='orange')
+          else:
+             g.edge(str(id(node)), str(id(key)),label=str(i))
     
     drawn_nodes = set()
     for key in treedict:
@@ -130,6 +133,7 @@ def processInput(currentNode,treedict,inputstring,label2l=None):
   for ind,i in enumerate(inputstring):
     revelem= {value: key for key, value in treedict[currentNode].items()}
     flag=False
+    prevnode=currentNode
     for t in revelem:
       # print( t, i,inputstring,ind)
        if i in t:
@@ -138,7 +142,7 @@ def processInput(currentNode,treedict,inputstring,label2l=None):
           break 
     if not flag:
        raise Exception("not DFA")
-    outgraphs.append(draw_graph_visualized(currentNode,treedict,inputstring,ind))
+    outgraphs.append(draw_graph_visualized(currentNode,treedict,labe2l=inputstring,at=ind,fromedge=i,previousnode=prevnode))
   return outgraphs
 
 
@@ -169,4 +173,4 @@ def myModule(currentNode,treedict,inputstring):
   generate_gif(inputstring)
 
 
-myModule(q0,tree2,'ababababababbabababababaabbabba')
+myModule(q0,tree2,'abababbbaa')
