@@ -1,7 +1,7 @@
 import graphviz
 import os
 path=os.path.dirname(os.path.abspath(__file__))
-
+print(path)
 
 class Node:
   def __init__(self, name,children=None,state=0):
@@ -40,7 +40,6 @@ tree2={
    q1:{q2:'b',q0:'a'},
    q2:{q2:'ba'}
 }
-
 
 
 def draw_graph(treedict,labe2l=None):
@@ -136,7 +135,7 @@ def processInput(currentNode,treedict,inputstring,label2l=None):
        if i in t:
           flag=True
           currentNode=revelem[t]
-          break
+          break 
     if not flag:
        raise Exception("not DFA")
     outgraphs.append(draw_graph_visualized(currentNode,treedict,inputstring,ind))
@@ -148,16 +147,16 @@ def generate_gif(filepattern):
   import glob
 
   # Set the file pattern to load the images
-  file_pattern = str(filepattern)+'_*.png'
+  file_pattern = os.path.join(path,str(filepattern)+'_*.png')
 
   # Set the output GIF filename
-  output_gif_filename = f'{str(filepattern)}.gif'
+  output_gif_filename = os.path.join(path,f'{str(filepattern)}.gif')
 
   # Load the images into a list
   images = []
   for i,filename in enumerate( (glob.glob(file_pattern))):
       print(filepattern+f'_{i}')
-      images.append(Image.open(filepattern+f'_{i}.png'))
+      images.append(Image.open(os.path.join(path,filepattern)+f'_{i}.png'))
 
   # Save the list of images as a GIF file
   images[0].save(output_gif_filename, save_all=True, append_images=images[1:], duration=800, loop=0)
@@ -170,4 +169,4 @@ def myModule(currentNode,treedict,inputstring):
   generate_gif(inputstring)
 
 
-myModule(q0,tree2,'ababbabbababab')
+myModule(q0,tree2,'ababababababbabababababaabbabba')
