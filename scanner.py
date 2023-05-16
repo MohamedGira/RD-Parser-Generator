@@ -74,42 +74,42 @@ def spacify(text,lst):
 def find_token(text):
     Tokens=[] # to add tokens to list
     
-    lines=spacify(text,list(Operators.keys())).lower().split('\n')
-    for line in lines:
-        line=line.strip()
-        tokens=[a for a in line.split(' ') if a!=' ' and a !='']
-        ind=0
-        while ind < len(tokens):
-            tok=tokens[ind]
-            if(re.match(r'^!',tok)):
-                Tokens.append(token(' '.join(tokens[ind:]),ReservedWords[tok]))
-                break
-            elif(re.match(r'^"|^\'',tok)):
-                oind=ind
-                str=tokens[oind]
-                if re.match(r'^"',tok):
-                    str=r'"\s*$'
-                else:
-                    str=r'\'\s*$'
-                
-                while(ind<len(tokens)and not re.search(str,tokens[ind])):
-                    ind+=1
-                if (ind>=len(tokens)):
-                    Tokens.append(token(' '.join(tokens[ind:]),Token_type.Error))    
-                else:
-                    Tokens.append(token(' '.join(tokens[oind:ind+1]),Token_type.Literal))
-                
-            elif tok in ReservedWords:
-                Tokens.append(token(tok,ReservedWords[tok]))
-            elif tok in Operators:
-                Tokens.append(token(tok,Operators[tok]))
-            elif(re.match(r'^[a-zA-z][a-zA-z0-9]*$',tok)):
-                Tokens.append(token(tok,Token_type.Identifier))
-            elif(re.match(r'([0-9]+.[0-9])|[0-9]+',tok)):
-                Tokens.append(token(tok,Token_type.Constant))
+    line=spacify(text,list(Operators.keys())).lower()
+    line=line.replace("\n", " \n ")
+    tokens=[a for a in line.split(' ') if a!=' ' and a !='']
+    print (tokens)
+    ind=0
+    while ind < len(tokens):
+        tok=tokens[ind]
+        if(re.match(r'^!',tok)):
+            Tokens.append(token(' '.join(tokens[ind:]),ReservedWords[tok]))
+            break
+        elif(re.match(r'^"|^\'',tok)):
+            oind=ind
+            str=tokens[oind]
+            if re.match(r'^"',tok):
+                str=r'"\s*$'
             else:
-                Tokens.append(token(tok,Token_type.Error))
-            ind+=1
+                str=r'\'\s*$'
+            
+            while(ind<len(tokens)and not re.search(str,tokens[ind])):
+                ind+=1
+            if (ind>=len(tokens)):
+                Tokens.append(token(' '.join(tokens[ind:]),Token_type.Error))    
+            else:
+                Tokens.append(token(' '.join(tokens[oind:ind+1]),Token_type.Literal))
+            
+        elif tok in ReservedWords:
+            Tokens.append(token(tok,ReservedWords[tok]))
+        elif tok in Operators:
+            Tokens.append(token(tok,Operators[tok]))
+        elif(re.match(r'^[a-zA-z][a-zA-z0-9]*$',tok)):
+            Tokens.append(token(tok,Token_type.Identifier))
+        elif(re.match(r'([0-9]+.[0-9])|[0-9]+',tok)):
+            Tokens.append(token(tok,Token_type.Constant))
+        else:
+            Tokens.append(token(tok,Token_type.Error))
+        ind+=1
       
     return Tokens
        
