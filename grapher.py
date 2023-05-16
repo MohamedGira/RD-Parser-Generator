@@ -56,19 +56,45 @@ tree2={
 fortran_words='program implicit none end if else end integer real parameter do character print* read*'
 fortran_words=fortran_words.split(' ')
 for word in fortran_words:
-  draw_graph_no_splt(accept_word(word)).render(word.replace('*',''),cleanup=True,directory=os.path.join(path,'outputs'))
+  draw_graph_no_split(accept_word(word)).render(word.replace('*',''),cleanup=True,directory=os.path.join(path,'outputs'))
  """
 
 """ while(1):
   word=input('enter word to create DFA for: ')
-  draw_graph_no_splt(accept_word(word)).render(word,cleanup=True,directory=os.path.join(path,'outputs')) """
+  draw_graph_no_split(accept_word(word)).render(word,cleanup=True,directory=os.path.join(path,'outputs')) """
 
 class Visualizer:
+    """
+    This Visualizer interacts with DFA class
+
+    Visualizer class: contains all necessary methods to
+     1 - draw a graph from its tree dictionary representation.
+     2 - run a word throgh a graph to see if its accepted: outputs a GIF visualization
+
+    Tree example:
+        q0=Node('q0')
+        q1=Node('q1')
+        q2=Node('q2',state=1)
+        tree2={
+          q0:{q0:'a',q1:'b'},
+          q1:{q2:'b',q0:'a'},
+          q2:{q2:'ba'}
+    -> let i = array of Nodes
+        tree 3{
+          i[0]:{i[1]:'\+|-',i[2]:'[0-9]'},#start state
+          i[1]:{i[2]:'[0-9]',i[3]:'\.'},#sign state
+          i[2]:{i[2]:'[0-9]',i[3]:'\.',},#int state
+          i[3]:{i[3]:'[0-9]'},#double state
+        }
+    Useage: 
+      REGULAR methods: used for single letter graphs, for example, in tree 2, b and a in q2 are splitted into 2 edges
+      NO_SPLIT methods: used for trees with regexes in one edge, such as tree 3
     
+    """
     def __init__(self) -> None:
-      pass
+       pass
     @staticmethod
-    def draw_graph_no_splt(treedict,labe2l=None):
+    def draw_graph_no_split(treedict,labe2l=None):
     # Graphically represents the given ROBDD using graphviz.
       g = graphviz.Digraph(format='png')
       g.attr(rankdir='TB')
@@ -270,13 +296,11 @@ class Visualizer:
           value=treedict[key]
           draw_node({key:value}) 
         return g
-
     @staticmethod
     def generate_gif(graphs,path=path,name=None):
       if name==None:
         output_gif_filename=f'{str(int(time.time()))}.gif'
-      writer = imageio.get_writer(output_gif_filename, mode='I', duration=0.8*len(graphs))
-      print(0.8*len(graphs))
+      writer = imageio.get_writer(output_gif_filename, mode='I', duration=300,loop=0)
       for graph in graphs:
           # Render the graph as a PNG
           png_bytes = graph.pipe(format='png')
@@ -309,7 +333,6 @@ class Visualizer:
           raise Exception("not DFA")
         outgraphs.append(Visualizer.draw_graph_visualized(currentNode,treedict,labe2l=inputstring,at=ind,fromedge=i,previousnode=prevnode,theme=style))
       return outgraphs
-
     @staticmethod
     def processInput_no_split(currentNode,treedict,inputstring,label2l=None,style=None):  
       outgraphs=[]
@@ -332,8 +355,7 @@ class Visualizer:
     @staticmethod
     def GIF(currentNode,treedict,inputstring,remove_source_images=False,style=None):  
       graphs=Visualizer.processInput(currentNode,treedict,inputstring,style=style)
-      Visualizer.generate_gif(graphs,os.path.join(path,'animations'))
-      
+      Visualizer.generate_gif(graphs,os.path.join(path,'animations')) 
     @staticmethod
     def GIF_NO_SPLIT(currentNode,treedict,inputstring,remove_source_images=False,style=None):
       if currentNode==None:
@@ -344,25 +366,45 @@ class Visualizer:
       return fpath
     
 class DFA:
+  """
+  DFA class that generates a DFA that accepts a specific word
+  """
   def __init__(self,accpets):
     self.word=accpets
     self.dict=self.accept_word(accpets)
   @staticmethod
+  def regictify_dict(dic):
+    """
+    takes dfa dict and completes it by adding reject state
+    """
+    d={}
+    
+    reject_node=Node('reject')
+    for i in dic.keys():
+        s=[]
+        for j in dic[i].keys():
+          s.append(dic[i][j])
+        a='|'.join(s)
+        dic[i].update({reject_node:f'^(?!{a})'})
+    dic.update({reject_node:{reject_node:'(.)+'}})
+       
+    return (dic,reject_node)
+  @staticmethod
   def accept_word(word)->dict:
     nodearr=[]
-    reg=Node('reject')
     
     for i in range(len(word)+1):
         nodearr.append(Node(f'{i+1}'))
     nodearr[-1].state=1
-
     tree={}
     
     for i in range(len(nodearr)-1):
-        tree.update({nodearr[i]:{nodearr[i+1]:f'{re.escape( word[i].lower())}|{re.escape(word[i].upper())}',
-                                 reg:f'[^({re.escape(word[i].lower())}|{re.escape(word[i].upper())})]'}})
-        #tree[word[i]]={tree[word[i+1]]:l,reg:f'[^{word[i]}]'}
-    tree.update({reg:{reg:('(.)+')}})
+        if word[i].isalpha():
+          tree.update({nodearr[i]:{nodearr[i+1]:f'{re.escape( word[i].lower())}|{re.escape(word[i].upper())}'}})
+        else:
+          tree.update({nodearr[i]:{nodearr[i+1]:f'{re.escape( word[i].lower())}'}})
+        
+    tree,reg=DFA.regictify_dict(tree)
     tree.update({nodearr[-1]:{reg:('(.)+')}})
     
     return tree
@@ -389,7 +431,8 @@ Visualizer.GIF(q0,tree2,'ababaabbbaa',remove_source_images=True,style='modern')
 
  """
 
-#Visualizer.draw_graph_no_splt(DFA.accept_word(']')).render(']',cleanup=True,directory=os.path.join(path,'outputs'))
-A=DFA(']')
-A.try_word(']]]')
+#Visualizer.draw_graph_no_split(DFA.accept_word('aloo')).render(']',cleanup=True,directory=os.path.join(path,'outputs'))
+
+A=DFA('alooo')
+A.try_word('aloopl')
   
