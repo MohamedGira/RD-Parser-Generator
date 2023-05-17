@@ -20,47 +20,7 @@ class token:
         }
             
 #Reserved word Dictionary
-ReservedWords={
-            "begin":Token_type.Begin,
-            "end":Token_type.End,
-            "do":Token_type.Do,
-            "if":Token_type.If,
-            "then":Token_type.Then,
-            "else":Token_type.Else,
-            "integer":Token_type.Integer,
-            "real":Token_type.Real,
-            "complex":Token_type.Complex,
-            "parameter":Token_type.Parameter,
-            "character":Token_type.Character,
-            "program":Token_type.Program,
-            "implicit":Token_type.Implicit,
-            "none":Token_type.none,
-            "print":Token_type.Prints,
-            "read":Token_type.Reads,
-            "!":Token_type.Comment,
-            
-            }
-Operators={
-            ",":Token_type.Comma,
-            "::":Token_type.Scopeop,
-            "<":Token_type.Lessthanop,
-            ">":Token_type.Greaterthanop,
-            "<=":Token_type.Lessthanorequalop,
-            ">=":Token_type.Greaterthanorequalop,
-            "/=":Token_type.Notequalop,
-            "==":Token_type.Isequalop,
-            "=":Token_type.Equalop,
-            "+":Token_type.Plusop,
-            "-":Token_type.Minusop,
-            "*":Token_type.Multiplyop,
-            "/":Token_type.Divideop,
-            "(":Token_type.OpenParan,
-            ")":Token_type.CloseParan,
-            "[":Token_type.OpenBrac,
-            "]":Token_type.CloseBrac,
-            ".":Token_type.Dot
-            
-          }
+
 
 def spacify(text,lst):
     for i in lst:
