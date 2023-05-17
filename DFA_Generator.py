@@ -47,7 +47,7 @@ words=[
 ['Implicit',],
 ['none',],
 ['Prints',],
-['Reads',],
+['Read',],
 ['Comment',-1],#not implemented yet
 ['Scopeop','::'],
 ['Comma',','],
