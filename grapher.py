@@ -3,7 +3,7 @@ import graphviz
 import os
 path=os.path.join( os.path.dirname(os.path.abspath(__file__)))
 print(path)
-from myutils import *
+from DFAColors import *
 from PIL import Image, ImageTk
 import imageio.v2 as imageio
 import glob
@@ -236,7 +236,7 @@ class Visualizer:
     @staticmethod
     def draw_graph_visualized_no_split(currentNode,treedict,labe2l='None',at=0,fromedge='',previousnode='',theme=None):
       # Graphically represents the given ROBDD using graphviz.
-        from myutils import themes
+        from DFAColors import themes
 
         
         if theme not in themes:
@@ -246,7 +246,7 @@ class Visualizer:
         g.attr(rankdir='TB')
         g.graph_attr['labeljust'] = 'l'
         g.graph_attr['bgcolor'] = palette['graph_bg_color']
-        g.attr(dpi='100')
+        g.attr(dpi='80')
         g.node_attr['fontname']=g.edge_attr['fontname']='Arial'
         #g.node_attr['fontcolor']='grey'
         #g.edge_attr['fontcolor']='grey'
@@ -432,7 +432,7 @@ Visualizer.GIF(q0,tree2,'ababaabbbaa',remove_source_images=True,style='modern')
  """
 
 #Visualizer.draw_graph_no_split(DFA.accept_word('aloo')).render(']',cleanup=True,directory=os.path.join(path,'outputs'))
-
-A=DFA('alooo')
-A.try_word('aloopl')
+if __name__=='__main__':
+  A=DFA('alooo')
+  A.try_word('aloopl')
   
