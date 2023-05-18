@@ -31,7 +31,7 @@ class Token_type(Enum): # listing all tokens type
     Program=25
     Implicit=26
     none=27
-    Prints=28
+    Print=28
     Read=29
     Comment=30
     Scopeop=31
@@ -46,6 +46,8 @@ class Token_type(Enum): # listing all tokens type
     newLine=40
     Semicolon=41
     Write=42
+    ConstantI=43
+    ConstantR=44
 
 
 
@@ -65,9 +67,8 @@ ReservedWords={
             "program":Token_type.Program,
             "implicit":Token_type.Implicit,
             "none":Token_type.none,
-            "print":Token_type.Prints,
+            "print":Token_type.Print,
             "read":Token_type.Read,
-            "write":Token_type.Read,
             "!":Token_type.Comment,
             
             }
@@ -102,4 +103,15 @@ def get_lower_dict(enum):
     return d
 
 
-
+class token:
+    """ class token to hold string and token type and line """
+    def __init__(self, lex, token_type,line):
+        self.lex = lex
+        self.line= line
+        self.token_type = token_type
+    def to_dict(self):
+        return {
+            'Lex': self.lex,
+            'Line': self.line,
+            'token_type': self.token_type
+}
