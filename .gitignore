@@ -3,5 +3,7 @@ example.png
 old.py
 ww.py
 playground.py
-
+playground/
 outputs/
+parser/Trash/
+parser/separate/
