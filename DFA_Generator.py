@@ -1,9 +1,10 @@
 from grapher import *
 from Tokens.TokenTypes import *
 
+
 def regictify_dict(dic):
     """
-    takes dfa dict and completes it by adding reject state
+    takes dfa dict representation and completes it by adding reject state
     """
     d={}
     
@@ -46,11 +47,12 @@ words=[
 ['Program',],
 ['Implicit',],
 ['none',],
-['Prints',],
+['Print',],
 ['Read',],
 ['Comment',-1],#not implemented yet
 ['Scopeop','::'],
 ['Comma',','],
+['newLine','\n'],
 ['OpenParan','('],
 ['CloseParan',')'],
 ['Dot','.'],
@@ -61,6 +63,7 @@ words=[
 ]
 
 DFA_dict={}
+
 for wordarr in words:
     if len(wordarr)==1:
         DFA_dict[Token_type[wordarr[0]]]=DFA(wordarr[0])
@@ -79,11 +82,18 @@ identifier_dict=regictify_dict({
 
 #Const DFA
 i=[Node('q0'),Node('q1'),Node('q2',state=1),Node('q3',state=1)]
-const_dict=regictify_dict( {
+constr_dict=regictify_dict( {
     i[0]:{i[1]:'\+|-',i[2]:'[0-9]'},#start state
     i[1]:{i[2]:'[0-9]',i[3]:'\.'},#sign state
     i[2]:{i[2]:'[0-9]',i[3]:'\.',},#int state
     i[3]:{i[3]:'[0-9]'},#double state
+})
+
+i=[Node('q0'),Node('q1'),Node('q2',state=1)]
+consti_dict=regictify_dict( {
+    i[0]:{i[1]:'\+|-',i[2]:'[0-9]'},#start state
+    i[1]:{i[2]:'[0-9]'},#sign state
+    i[2]:{i[2]:'[0-9]'},#int state
 })
 #test
 #Visualizer.GIF_NO_SPLIT(i[0],const_dict,'2aa22_s',True)
@@ -105,8 +115,9 @@ def inDFA_dict(dfadic,strr,strrdict):
     dfadic[Token_type[strr]].dict=strrdict
 
 inDFA_dict(DFA_dict,'Literal',literal_dict)
-inDFA_dict(DFA_dict,'Constant',const_dict)
+inDFA_dict(DFA_dict,'ConstantI',consti_dict)
+inDFA_dict(DFA_dict,'ConstantR',constr_dict)
 inDFA_dict(DFA_dict,'Identifier',identifier_dict)
-
-#DFA_dict['Literal'].try_word('"asdsd"')
+#print(DFA_dict)
+#DFA_dict[Token_type.ConstantI].try_word('43242342.3')
 
