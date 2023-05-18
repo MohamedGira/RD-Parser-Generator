@@ -1,0 +1,155 @@
+
+#program definition
+
+<Parse> -> [PROGRAM] [IDENTIFIER] [NEWLINE] <body> [END] [PROGRAM] [IDENTIFIER] [NEWLINE]
+
+<body> ->  [IMPLICIT] [NONE] [NEWLINE] <declarations> <statements> 
+
+___________
+
+#declaration
+
+<declarations> -> <constant_declarations>  <variable_declarations> | ε
+
+<constant_declarations> ->  <constant_declaration> <constant_declarations_dash> | ε
+<constant_declaration> -> <type> [,] [PARAMETER] [::] [IDENTIFIER] [=] <number> [NEWLINE] | ε
+<constant_declarations_dash> ->  <constant_declarations> | ε
+
+<variable_declarations> -> <variable_declaration>  <variable_declarations_dash> | <variable_declarations_dash>
+<variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> [NEWLINE] | ε
+<equals_something> -> [=] <number> | ε
+<variable_declarations_dash> ->  <variable_declarations> | ε
+
+______________________
+
+
+
+#statments section
+
+<statements> -> <statement> <statements_dash> | ε
+
+<statement> -> <assignment_statement> | <if_statement> | <do_loop_statement> | <input_output_statement>
+
+<statements_dash> -> <statement> <statements_dash> | ε
+
+
+<assignment_statement> -> [IDENTIFIER] [=] <expression>  [NEWLINE]
+
+
+<if_statement> -> [IF] [(] <boolean_expression> [)] [THEN] [NEWLINE] <statements> <else_statement> [END] [IF] [NEWLINE]
+
+
+<else_statement> -> [ELSE] [NEWLINE] <statements> | ε
+ 
+
+<do_loop_statement> -> [DO] [IDENTIFIER] [=] <sss> [,] <sss> <step> [NEWLINE] <statements> [END] [DO] [NEWLINE]
+
+<sss> -> [ConstantI] | [IDENTIFIER]
+
+<step> -> [,] <sss> | ε
+
+
+___________
+#input oupput
+
+<input_output_statement> -> <output_statement> | <input_statement>
+
+<output_statement> -> [PRINT] [*]  <display_line> <output_statement_dash>  [NEWLINE]
+
+<output_statement_dash> -> [,] [IDENTIFIER] <output_statement_dash> | ε
+
+<display_line> -> [,] [literal] | ε
+
+<input_statement> -> [READ] [*] [,] [IDENTIFIER] <input_statement_dash>  [NEWLINE]
+
+<input_statement_dash> -> [,] [IDENTIFIER] <input_statement_dash> | ε
+
+___________
+
+#expressions with precedence
+
+<boolean_expression> -> <expression> <relational_operator> <expression>
+
+<relational_operator> -> [>] | [<] | [<=] | [>=] | [==] | [/=]
+
+
+<expression> -> <term> <expression_dash>
+
+<expression_dash> -> <additive_operator> <term> <expression_dash> | ε
+
+<term> -> <factor> <term_dash>
+
+<term_dash> -> <multiplicative_operator> <factor> <term_dash> | ε
+
+<factor> -> <number> | [IDENTIFIER] | [(] <expression> [)]
+
+<additive_operator> -> [+] | [-]
+
+<multiplicative_operator> -> [*] | [/]
+
+______________________
+#Token Types
+
+<type> -> [INTEGER] | [REAL] | [CHARACTER]
+
+<number> -> [ConstantI] | [ConstantR]
+
+______________________
+
+
+DICTEOF
+EOF
+
+[] ARE NOT PART OF THE LANGUAGE IT MEANS THAT WHATS INSIDE IS A TOKEN
+<> MEANS THAT WHATS INSIDE IS A FUNCTION
+
+[ConstantI] 
+
+[ConstantR] 
+
+[IDENTIFIER] 
+
+[comment] 
+
+[literal] 
+
+NEWLINE ->\ _dash\n_dash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////
+
+
+
+<boolean_expression> -> <expression> <relational_operator> <expression>
+
+<relational_operator> -> > | < | <= | >= | == | /=
+
+<expression> -> <term> <expression_dash>
+
+<expression_dash> -> <additive_operator> <term> <expression_dash> | ε
+
+<term> -> <factor> <term_dash>
+
+<term_dash> -> <multiplicative_operator> <factor> <term_dash> | ε
+
+<factor> -> <number> | <variable_name> | ( <expression> )
+
+<additive_operator> -> + | -
+
+<multiplicative_operator> -> * | /
+
+a * b + c
