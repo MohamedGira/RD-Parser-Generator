@@ -8,7 +8,7 @@ import pandastable as pt
 from nltk.tree import *
 from Tokens.TokenTypes import *
 import globals
-from generatedParserCode2 import *
+from generatedparstcodeDevTry999 import *
 from scanner.scanner import find_token,token
 
 
@@ -51,7 +51,10 @@ if __name__ == "__main__":
             globals.dtDaPT = pt.Table(globals.dtDa1, dataframe=df, showtoolbar=True, showstatusbar=True)
             globals.dtDaPT.show()
         # start Parsing
-        Node=Parse(0,globals.Tokens)["node"]
+        if(neeew):
+            Node=Parse(0)["node"]
+        else:
+            Node=Parse(0,globals.Tokens)["node"]
         
         try:
             globals.dtDa2.destroy()
