@@ -1,10 +1,10 @@
-# Recursive Descent Compiler Compiler
+# Recursive Descent Parser Generator
 
-Welcome to the Recursive Descent Compiler Compiler documentation!
+Welcome to the Recursive Descent Parser Generator documentation!
 
 This Repo ws meant hold the frontend compiler stages for Fortran programming language. But... I did A Thing!
 
-Instead of Writing the functions one by one, then facing hell when a bug is found or a mistake in the grammer is found. I made a compiler compiler 😃
+Instead of Writing the functions one by one, then facing hell when a bug is found or a mistake in the grammer is found. I made a Parser generator 😃
 
 The Recursive Descent Compiler Compiler is a groundbreaking tool designed to simplify the process of generating parsing functions in Python based on valid grammar rules **with respect to Recursive Descent parser rules** . With this tool, you can easily build language processors, parsers, and compilers without the need for manual implementation of complex parsing logic.
 
@@ -12,7 +12,7 @@ The Recursive Descent Compiler Compiler is a groundbreaking tool designed to sim
 
 ## Key Features
 
-  **✅ Automatic Conversion**: The Recursive Descent Compiler Compiler automatically converts valid grammar rules into parsing functions (not 100% accurate yet) , saving you time and effort in implementing parsers from scratch, and giving you the chance to focus on more complex features
+  **✅ Automatic Conversion**: The Recursive Descent Parser Generator automatically converts valid grammar rules into parsing functions (not 100% accurate yet) , saving you time and effort in implementing parsers from scratch, and giving you the chance to focus on more complex features
   
  **✅ Support for Recursive Grammar**: The tool seamlessly handles right recursive grammar rules, allowing you to define and parse complex language structures.
 
