@@ -1,8 +1,8 @@
 import globals
 def Match(a,j,Tokens,appendToError=True):
     output=dict()
-    if(j<len(Tokens)):
-        Temp=Tokens[j].to_dict()
+    if(j<len(globals.Tokens)):
+        Temp=globals.Tokens[j].to_dict()
         tok=Temp['token_type']
         #print( f' matching {a} with {tok} ')
         if(Temp['token_type']==a):
@@ -34,6 +34,6 @@ def MatchTry(a,j,Tokens):
         return False
 def MatchArr(Arr,ind,Tokens,appendToError):
   for i in Arr:
-    if Match(i,ind,Tokens,appendToError)["node"]!=["error"]:
+    if Match(i,ind,globals.Tokens,appendToError)["node"]!=["error"]:
       return True
   return False

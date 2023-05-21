@@ -35,7 +35,6 @@ def find_token(text):
     for ind,i in enumerate(tokens):
         tokens[ind]=i.replace('\t','')
 
-    print (tokens)
     ind=0
     line=1
     while ind < len(tokens):

@@ -1,0 +1,94 @@
+PROGRAM constants_and_variables
+  IMPLICIT NONE
+  REAL, PARAMETER :: pi = 3.14
+  INTEGER :: a = 5
+  PRINT*, a, pi, str
+END PROGRAM constants_and_variables
+__
+PROGRAM assignments
+  IMPLICIT NONE
+  INTEGER :: a = 5
+  REAL :: c = 2.5
+  a = a + 2
+  c = c * 3.0
+  PRINT*, a, c
+END PROGRAM assignments
+__
+PROGRAM in_out
+  IMPLICIT NONE
+  INTEGER :: n
+  READ*, n
+  n = n + 2
+  PRINT*, n
+  PRINT*, 'Your number:'
+END PROGRAM in_out
+__
+PROGRAM if_statements
+  IMPLICIT NONE
+  INTEGER :: a = 5
+  IF (a == 5) THEN
+    PRINT*, 'a equals 5'
+  ELSE
+    PRINT*, 'a does not equal 5'
+  END IF
+END PROGRAM if_statements
+__
+PROGRAM do_loops
+  IMPLICIT NONE
+  INTEGER :: i
+  DO i = 1, 10, 2
+    PRINT*, i
+  END DO
+END PROGRAM do_loops
+__
+PROGRAM no_implicit_none
+  INTEGER :: x = 5
+END PROGRAM no_implicit_none
+__
+PROGRAM var_before_const
+  IMPLICIT NONE
+  INTEGER :: a = 5
+  REAL, PARAMETER :: pi = 3.14
+  a = a + pi
+  PRINT*, a
+END PROGRAM var_before_const
+__
+PROGRAM operator_precedence
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  INTEGER :: b = 3
+  INTEGER :: c = 4
+  INTEGER :: d = 5
+  INTEGER :: x = 0
+  x = a+b*c-d
+  PRINT*, x
+END PROGRAM operator_precedence
+__
+PROGRAM ronaldo
+  INTEGER :: sui = 7
+END PROGRAM messi
+
+
+___OTHERS
+PROGRAM constants_and_variables
+  IMPLICIT NONE
+  REAL, PARAMETER :: pi = 3.14
+  INTEGER :: a = 5
+  PRINT*, 'a', pi, str
+END PROGRAM constants_and_variables 
+_PASSED
+
+
+PROGRAM do_loops
+  IMPLICIT NONE
+  INTEGER :: i
+  DO i = 1, 10, 2
+    PRINT*, i
+     if ( a>=0 ) then
+	e = a*b-s*r-qqr*trf*fefe/ref+rew*r+x-e
+      end if
+  END DO
+END PROGRAM do_loops 
+_PASSED
+
+EOF
