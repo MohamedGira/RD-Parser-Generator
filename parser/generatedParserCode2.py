@@ -1,11 +1,11 @@
 import sys
 sys.path.append("D:\Materials\compilers\project\Lexical-Analyser\\")  # Adds the parent directory to the sys.path
-
 from Tokens.TokenTypes import *
-from parser.utils.Matches import Match,MatchArr
+from utils.Matches import Match,MatchArr
 from nltk.tree import *
-
 import globals
+neeew=False
+
 intrealchar=[Token_type.Integer,Token_type.Real,Token_type.Literal]
 plusMinus=[Token_type.Plusop,Token_type.Minusop]
 DevMul=[Token_type.Divideop,Token_type.Multiplyop]

@@ -34,7 +34,6 @@ def txtToCode(something,ind,s,initial=False,ident=' '):
     return s
 global_dict={}
 def matchfunc(onething):
-    
     if(onething[0]=='<'):
         res=[onething]
         while(res[0][0]=='<'):
@@ -159,7 +158,7 @@ def generate_parse_functions(rules):
                         else:
                             s=add_line(s,' else:')
                             s=add_line(s,'   out["node"]=["error"]')
-                            s=add_line(s,f'   globals.errors.append(f"Syntax error at line {"{Tokens[ind].line}"}:  Expected {function_name.lower()} found ` {"{Tokens[ind].lex}"} `")')
+                            s=add_line(s,f'  globals.errors.append(f"Syntax error at line {"{Tokens[ind].line}"}:  Expected {function_name.lower()} found ` {"{Tokens[ind].lex}"} `")')
                             s=add_line(s,'   out["index"]=ind+1')
                             s=add_line(s,'   return out')
         
@@ -185,7 +184,7 @@ def generate_parse_functions(rules):
 def treeGenerator():
     pass
 
-secs=extract_section(os.path.join(os.path.dirname(__file__),'../playground/a V2.txt'))
+secs=extract_section(os.path.join(os.path.dirname(__file__),'Grammer.txt'))
 """ for i in secs:
     functions=generate_parse_functions(i.grammer)
     fname='separate\\'+i.name[1:-1]

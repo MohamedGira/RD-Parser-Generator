@@ -15,7 +15,7 @@ ___________
 <constant_declaration> -> <type> [,] [PARAMETER] [::] [IDENTIFIER] [=] <number> [NEWLINE] | ε
 <constant_declarations_dash> ->  <constant_declarations> | ε
 
-<variable_declarations> -> <variable_declaration>  <variable_declarations_dash> | <variable_declarations_dash>
+<variable_declarations> -> <variable_declaration>  <variable_declarations_dash> | ε
 <variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> [NEWLINE] | ε
 <equals_something> -> [=] <number> | ε
 <variable_declarations_dash> ->  <variable_declarations> | ε
