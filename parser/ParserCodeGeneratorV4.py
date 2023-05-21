@@ -23,13 +23,7 @@ def get_matches(oneOfOrs):
 def add_line(s,line,num=None,end='\n'):
     return s+line+f'{end}' if not num else s+line+f'           {s}{end}'
 
-def merge_dicts(dict1,dict2):
-    for i in dict2.keys():
-        if i in dict1:
-            dict1[i]+=dict2[i]
-        else:
-            dict1[i]=dict2[i]
-    return dict1
+
 
 global_dict={}
 global_dict_str={}
@@ -51,7 +45,6 @@ def matchfunc(onething,rightSideStr):
     except:
         raise (IndexError('s is not [ or <'))
     return s
-
 def matchfunc2(rightSideStr,many=False):
     rightSideStr=rightSideStr.strip() 
     firstelement=rightSideStr[0]
@@ -95,8 +88,19 @@ def matchfunc2(rightSideStr,many=False):
             token_name=re.sub(r'\[|]',r'',rightSideStr.split(' ')[0]).lower()
             s=add_line('',f'Match({lowerdict[token_name]},ind,False)["node"]!=["error"]',end='')
     return s
-
+def merge_dicts(*dicts):
+    """merge dicts into one dict, if there are similar keys, the latter one will overrite the former"""
+    d={}
+    if(dicts):
+        for dic in dicts:
+            for key in dic:
+                d[key.lower()]=dic[key]
+    return d
+merge_dicts
 lowerdict=merge_dicts(get_lower_dict(Token_type),Operators)
+print(lowerdict.keys())
+while(True):
+    pass
 class section:
     def __init__(self,name="#undefined",grammer=''):
         self.name=name
@@ -264,7 +268,7 @@ s=add_line(s,'        arr=fillmatch(arr,match,i,ind)')
 s=add_line(s,'        Children.append(arr[-1]["node"])')
 s=add_line(s,'        if is_there_error(arr):')
 #s=add_line(s,"            print(f'error at {func_name}','at',globals.Tokens[ind].lex,'at',ind,'at',globals.Tokens[ind].token_type)")
-s=add_line(s,'            while ind<len(globals.Tokens) and globals.Tokens[ind].lex!="\n" :')
+s=add_line(s,'            while ind<len(globals.Tokens) and globals.Tokens[ind].lex!="\\n" :')
 s=add_line(s,'                ind+=1')
 s=add_line(s,'            arr[-1]["index"]=ind')
 s=add_line(s,'            if Token_type.newLine in matches[i:]:')
