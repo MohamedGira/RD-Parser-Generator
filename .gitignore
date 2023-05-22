@@ -7,3 +7,5 @@ playground/
 outputs/
 parser/Trash/
 parser/separate/
+__pycache__/
+*/**/__pycache__/

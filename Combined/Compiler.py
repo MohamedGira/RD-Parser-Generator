@@ -19,8 +19,8 @@ if __name__ == "__main__":
     
     """Scanner GUI"""
     
-    window_width = 800  # Specify the desired width
-    window_height = 600  # Specify the desired height
+    window_width = 1000  # Specify the desired width
+    window_height = 800  # Specify the desired height
     import pandas as pd
     import tkinter as tk
     from PIL import Image, ImageTk 
@@ -55,7 +55,10 @@ if __name__ == "__main__":
         df=pandas.DataFrame.from_records([t.to_dict() for t in globals.Tokens])
         
         
-        Node=Parse(0,globals.Tokens)["node"]
+        if(neeew):
+            Node=Parse(0)["node"]
+        else:
+            Node=Parse(0,globals.Tokens)["node"]
         
         
 
@@ -149,7 +152,7 @@ if __name__ == "__main__":
             df1=pandas.DataFrame(globals.errors)
             globals.dtDa2 = tk.Toplevel()
             globals.dtDa2.title('Error List')
-            globals.dtDaPT2 = pt.Table(globals.dtDa2, dataframe=df1, showtoolbar=True, showstatusbar=True)
+            globals.dtDaPT2 = pt.Table(globals.dtDa2, dataframe=df1, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
             globals.dtDaPT2.show()
         Node.draw()
         
