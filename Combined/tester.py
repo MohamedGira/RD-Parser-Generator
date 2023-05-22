@@ -8,7 +8,7 @@ import pandastable as pt
 from nltk.tree import *
 from Tokens.TokenTypes import *
 import globals
-from parser.generatedparstcodeDevTry999 import *
+from parser.generatedparstcodeDevTry11 import *
 from scanner.scanner import find_token,token
 
 
