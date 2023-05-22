@@ -1,9 +1,10 @@
 import sys
 sys.path.append("D:\Materials\compilers\project\Lexical-Analyser\\")  # Adds the parent directory to the sys.path
-from Tokens.TokenTypes import *
-
-from nltk.tree import *
 import globals
+from Tokens.TokenTypes import *
+from utils.Matches import Match,MatchArr
+from nltk.tree import *
+
 #program definition
 def Parse (ind):
  out={}
@@ -14,7 +15,7 @@ def body (ind):
  out={}
  matches=[Token_type.Implicit,Token_type.none,Token_type.newLine,declarations,statements]
  return applyfills(matches,ind,"body")
-neeew=True
+
 
 #declaration
 def declarations (ind):
@@ -29,7 +30,7 @@ def declarations (ind):
 
 def constant_declarations (ind):
  out={}
- if Match(Token_type.Comma,ind+1,False)["node"]!=["error"]:
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
      matches=[constant_declaration,constant_declarations_dash]
      return applyfills(matches,ind,"constant_declarations")
  else:
@@ -39,7 +40,7 @@ def constant_declarations (ind):
 
 def constant_declaration (ind):
  out={}
- if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
      matches=[type,Token_type.Comma,Token_type.Parameter,Token_type.Scopeop,Token_type.Identifier,Token_type.Equalop,number,Token_type.newLine]
      return applyfills(matches,ind,"constant_declaration")
  else:
@@ -49,7 +50,7 @@ def constant_declaration (ind):
 
 def constant_declarations_dash (ind):
  out={}
- if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
      matches=[constant_declarations]
      return applyfills(matches,ind,"constant_declarations_dash")
  else:
@@ -59,7 +60,7 @@ def constant_declarations_dash (ind):
 
 def variable_declarations (ind):
  out={}
- if Match(Token_type.Scopeop,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
      matches=[variable_declaration,variable_declarations_dash]
      return applyfills(matches,ind,"variable_declarations")
  else:
@@ -89,7 +90,7 @@ def equals_something (ind):
 
 def variable_declarations_dash (ind):
  out={}
- if Match(Token_type.Scopeop,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
      matches=[variable_declarations]
      return applyfills(matches,ind,"variable_declarations_dash")
  else:
@@ -101,7 +102,7 @@ def variable_declarations_dash (ind):
 #statments section
 def statements (ind):
  out={}
- if MatchArr([Token_type.If,Token_type.Identifier,Token_type.Do,Token_type.Print,Token_type.Read],ind,False):
+ if Match(Token_type.Identifier,ind,False)["node"]!=["error"]:
      matches=[statement,statements_dash]
      return applyfills(matches,ind,"statements")
  else:
@@ -120,20 +121,19 @@ def statement (ind):
  elif Match(Token_type.Do,ind,False)["node"]!=["error"]:
      matches=[do_loop_statement]
      return applyfills(matches,ind,"statement")
- elif MatchArr([Token_type.Read,Token_type.Print],ind,False):
+ elif Match(Token_type.Print,ind,False)["node"]!=["error"]:
      matches=[input_output_statement]
      return applyfills(matches,ind,"statement")
  else:
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def statements_dash (ind):
  out={}
- if MatchArr([Token_type.If,Token_type.Identifier,Token_type.Do,Token_type.Print,Token_type.Read,Token_type.Write],ind,False):
+ if Match(Token_type.Identifier,ind,False)["node"]!=["error"]:
      matches=[statement,statements_dash]
      return applyfills(matches,ind,"statements_dash")
  else:
@@ -178,8 +178,7 @@ def sss (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def step (ind):
@@ -206,8 +205,7 @@ def input_output_statement (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def output_statement (ind):
@@ -227,7 +225,7 @@ def output_statement_dash (ind):
 
 def display_line (ind):
  out={}
- if Match(Token_type.Literal,ind+1,False)["node"]!=["error"] and Match(Token_type.Comma,ind,False)["node"]!=["error"]:
+ if Match(Token_type.Comma,ind,False)["node"]!=["error"]:
      matches=[Token_type.Comma,Token_type.Literal]
      return applyfills(matches,ind,"display_line")
  else:
@@ -281,8 +279,7 @@ def relational_operator (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def expression (ind):
@@ -330,8 +327,7 @@ def factor (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def additive_operator (ind):
@@ -346,8 +342,7 @@ def additive_operator (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def multiplicative_operator (ind):
@@ -362,8 +357,7 @@ def multiplicative_operator (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 
@@ -383,8 +377,7 @@ def type (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def number (ind):
@@ -399,8 +392,7 @@ def number (ind):
      print("souldn't reach here")
      out["mode"]=["error"]
      out["node"]=["error"]
-     out["index"]=ind
-
+     out["index"]=["how did you get here?"]
      return out
 
 def is_there_error(arr):
@@ -417,8 +409,6 @@ def fillmatch(arr,match,position,j):
             arr.append(Match(match,j))
         else:
             arr.append(Match(match,arr[-1]['index']))
-    if(is_there_error(arr)):
-        pass
     return arr
 def MatchArr(Arr,ind,appendToError):
   for i in Arr:
@@ -427,14 +417,14 @@ def MatchArr(Arr,ind,appendToError):
   return False
 def applyfills(matches,ind,func_name):
     arr=[]
-    Children=[]
     out={}
+    Children=[]
     i=0
     while i< len (matches):
         match=matches[i]
         arr=fillmatch(arr,match,i,ind)
-        Children.append(arr[-1]["node"])
         ind=arr[-1]["index"]
+        Children.append(arr[-1]["node"])
         if is_there_error(arr):
             while ind<len(globals.Tokens) and globals.Tokens[ind].lex!="\n" :
                 ind+=1
@@ -444,9 +434,9 @@ def applyfills(matches,ind,func_name):
                 continue
             else:
                 out["mode"]=["error"]
-                out["index"]=ind
                 out["node"]=Tree(func_name,Children)
                 return out
+        
         ind+=1
         i+=1
     out["node"]=Tree(func_name,Children)
@@ -463,11 +453,11 @@ def Match(a,j,report=True):
         else:
             output["mode"]=["error"]
             output["node"]=["error"]
-            output["index"]=j
+            output["index"]=j+1
             if(report):
-                globals.errors.append(f"Syntax error at line {globals.Tokens[j].line}:  Expected {a} found ` {globals.Tokens[j].lex} `")
+                globals.errors.append("Syntax error : "+Temp["Lex"]+F" Expected {a}")
             return output
     else:
         output["node"]=["error"]
-        output["index"]=j
+        output["index"]=j+1
         return output
