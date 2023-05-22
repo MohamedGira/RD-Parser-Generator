@@ -8,7 +8,7 @@ import pandastable as pt
 from nltk.tree import *
 from Tokens.TokenTypes import *
 import globals
-from generatedparstcodeDevTry999 import *
+from parser.generatedparstcodeDevTry999 import *
 from scanner.scanner import find_token,token
 
 
@@ -35,22 +35,28 @@ if __name__ == "__main__":
     
     
     globals.dtDa2,globals.dtDa1=None,None
-    tests=get_tests(os.path.join(os.path.dirname(__file__), 'FORTRAN_testcases.txt'))
+    tests=get_tests(os.path.join(os.path.dirname(__file__), '..\\parser\\FORTRAN_testcases.txt'))
     trees=[]
     for i,test in enumerate(tests):
 
         globals.errors=[]
         globals.Tokens=find_token(test)
-        if(neeew):
-            Node=Parse(0)["node"]
-        else:
-            Node=Parse(0,globals.Tokens)["node"]
-            
-        trees.append(Node)
+        Node=None
+        if(not Token_type.Error in [t.token_type for t in globals.Tokens]):
+            if(neeew):
+                Node=Parse(0)["node"]
+            else:
+                Node=Parse(0,globals.Tokens)["node"]
+                
+            trees.append(Node)
+       
         if(not globals.errors):
             print(f'test {i+1}: Syntax is correct')
         else:
-            print(f'test {i+1}:')
+            if (not Node):
+                print(f'test {i+1}: had lexical errors, it didn\'t enter the parsing process: ({len(globals.errors)} error/s found)')
+            else:
+                print(f'test {i+1}: ({len(globals.errors)} error/s found)')
             errorified_test=test.split('\n')
             for error in globals.errors:
                 line=error.split(':')[0].split(' ')[-1]
