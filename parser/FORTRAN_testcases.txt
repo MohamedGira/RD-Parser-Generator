@@ -59,7 +59,7 @@ PROGRAM operator_precedence
   INTEGER :: b = 3
   INTEGER :: c = 4
   INTEGER :: d = 5
-  INTEGER :: x = 0
+  INTE GER :: x = 0
   x = a+b*c-d
   PRINT*, x
 END PROGRAM operator_precedence
@@ -77,7 +77,23 @@ PROGRAM constants_and_variables
   PRINT*, 'a', pi, str
 END PROGRAM constants_and_variables 
 _PASSED
-
+PROGRAM lets_try
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  INTEGER :: b = 3
+  INTEGER :: c = 4
+  INTEGER :: d = 5
+  INTEGER :: x = 0
+  x = a+b*c-d
+  if (x>22) then
+  DO i = 1, 10, 2
+    PRINT*, i
+     if ( a>=0 ) then
+      	e = a*b-s*r-qqr*trf*fefe/ref+rew*r+x-e
+      end if
+  END DO
+END PROGRAM lets_try
+__
 
 PROGRAM do_loops
   IMPLICIT NONE
@@ -90,5 +106,24 @@ PROGRAM do_loops
   END DO
 END PROGRAM do_loops 
 _PASSED
+
+PROGRAM lets_try2
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  INTEGER :: 2b = 3
+  INTEGER :: c = 4
+  INTEGER :: d = 5a
+  INTEGER :: x = 0
+  x = a+b*c-d ;
+  if (x>==22) the
+  DO i = 1, 10, 
+    PRINT*, i
+     if ( a>=0 ) then
+      	e = a*b-s*r-qqr*trf*fefe/ref+rew*r+x-e
+      end if
+  END DO
+END PROGRAM lets_try2
+
+____
 
 EOF
