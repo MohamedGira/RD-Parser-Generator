@@ -16,14 +16,14 @@ from grapher import *
 #Reserved word Dictionary
 
 
-def spacify(text,lst):
-    for i in lst:
-        text=text.replace(f'{i}',f' {i} ')
-        for i in [longel for longel in lst if len(longel)>1]:
-            text=text.replace('  '.join([*i]),i)
-        for ind,t in enumerate(text):
-            if(t=='.'and re.match(r'\d',text[ind-2])):
-                text=text[0:ind-1]+text[ind]+text[ind+2:]      
+def spacify(text,lst,exclude=['.']):
+
+    for i in lst  :
+        if i not in exclude:
+            text=text.replace(f'{i}',f' {i} ')
+            for i in [longel for longel in lst if len(longel)>1]:
+                text=text.replace('  '.join([*i]),i)
+              
     return text
 
 def find_token(text):
@@ -66,12 +66,13 @@ def find_token(text):
             Tokens.append(token(tok,Operators[tok],line))
         elif(re.match(r'^[a-zA-z][a-zA-z0-9]*$',tok)):
             Tokens.append(token(tok,Token_type.Identifier,line))
-        elif(re.match(r'([0-9]+.[0-9])',tok)):
+        elif(re.match(r'^\d*\.\d+$|^\d+\.\d*$',tok)):
             Tokens.append(token(tok,Token_type.ConstantR,line))
-        elif(re.match(r'[0-9]+',tok)):
+        elif(re.match(r'^[+-]?\d+$',tok)):
             Tokens.append(token(tok,Token_type.ConstantI,line))
         else:
             Tokens.append(token(tok,Token_type.Error,line))
+            globals.errors.append(f'Lexical Error at line {line }: {tok} is not a valid token')
         ind+=1
       
     return Tokens
@@ -79,7 +80,18 @@ def find_token(text):
     # complete 
        
     pass
+import re
 
+pattern = r'^[+-]?\d+$'
+integer_regex = re.compile(pattern)
+
+# Test some sample inputs
+inputs = ["42", "-123", "0", "+999", "abc", "3.14"]
+for input_str in inputs:
+    if integer_regex.match(input_str):
+        print(f"{input_str} is a valid integer.")
+    else:
+        print(f"{input_str} is not a valid integer.")
 
 
 
