@@ -212,7 +212,7 @@ sss=add_line(sss,'import globals')
 sss=add_line(sss,'from Tokens.TokenTypes import *')
 sss=add_line(sss,'from utils.Matches import Match,MatchArr')
 sss=add_line(sss,'from nltk.tree import *')
-write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry999.py'),sss,False)
+write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry101010.py'),sss,False)
 
 
 
@@ -220,10 +220,10 @@ secs=extract_section(os.path.join(os.path.dirname(__file__),'Grammer.txt'))
 for i in secs:
     functions=generate_parse_functions(i.grammer)
     fname='separate\\'+i.name[1:-1]
-    write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry999.py'),f'\n{i.name}',False)
+    write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry101010.py'),f'\n{i.name}',False)
     for i in functions:
-        write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry999.py'),i,False)
-        write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry999.py'),'\n',False)
+        write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry101010.py'),i,False)
+        write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry101010.py'),'\n',False)
 
 
 
@@ -301,4 +301,4 @@ s=add_line(s,'    else:')
 s=add_line(s,'        output["node"]=["error"]')
 s=add_line(s,'        output["index"]=j+1')
 s=add_line(s,'        return output')
-write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry999.py'),s,False)
+write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry101010.py'),s,False)
