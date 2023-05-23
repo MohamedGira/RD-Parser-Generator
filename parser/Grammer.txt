@@ -12,12 +12,14 @@ ___________
 <declarations> -> <constant_declarations>  <variable_declarations> | ε
 
 <constant_declarations> ->  <constant_declaration> <constant_declarations_dash> | ε
-<constant_declaration> -> <type> [,] [PARAMETER] [::] [IDENTIFIER] [=] <number> [NEWLINE] | ε
+<constant_declaration> -> <type> [,] [PARAMETER] [::] [IDENTIFIER] [=] <right_hand_side>  [NEWLINE] | ε
 <constant_declarations_dash> ->  <constant_declarations> | ε
 
 <variable_declarations> -> <variable_declaration>  <variable_declarations_dash> | ε
 <variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> [NEWLINE] | ε
-<equals_something> -> [=] <number> | ε
+<equals_something> -> [=] <right_hand_side> | ε
+<right_hand_side> -> <number> | [literal]
+
 <variable_declarations_dash> ->  <variable_declarations> | ε
 
 ______________________

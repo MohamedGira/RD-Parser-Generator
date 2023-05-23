@@ -41,8 +41,8 @@ def constant_declarations (ind):
 def constant_declaration (ind):
  out={}
  if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
-     matches=[type,Token_type.Comma,Token_type.Parameter,Token_type.Scopeop,Token_type.Identifier,Token_type.Equalop,number,Token_type.newLine]
-     return applyfills(matches,ind,"constant_declaration")
+    matches=[type,Token_type.Comma,Token_type.Parameter,Token_type.Scopeop,Token_type.Identifier,Token_type.Equalop,right_hand_side,Token_type.newLine]
+    return applyfills(matches,ind,"constant_declaration")
  else:
    out["node"]=Tree("constant_declaration",["ε"])
    out["index"]=ind
@@ -81,12 +81,27 @@ def variable_declaration (ind):
 def equals_something (ind):
  out={}
  if Match(Token_type.Equalop,ind,False)["node"]!=["error"]:
-     matches=[Token_type.Equalop,number]
+     matches=[Token_type.Equalop,right_hand_side]
      return applyfills(matches,ind,"equals_something")
  else:
    out["node"]=Tree("equals_something",["ε"])
    out["index"]=ind
    return out
+
+def right_hand_side (ind):
+ out={}
+ if MatchArr([Token_type.ConstantI,Token_type.ConstantR],ind,False):
+     matches=[number]
+     return applyfills(matches,ind,"right_hand_side")
+ elif Match(Token_type.Literal,ind,False)["node"]!=["error"]:
+     matches=[Token_type.Literal]
+     return applyfills(matches,ind,"right_hand_side")
+ else:
+     print("souldn't reach here")
+     out["mode"]=["error"]
+     out["node"]=["error"]
+     out["index"]=ind
+     return out
 
 def variable_declarations_dash (ind):
  out={}
