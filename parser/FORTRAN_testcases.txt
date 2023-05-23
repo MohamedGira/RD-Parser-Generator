@@ -144,4 +144,38 @@ END PROGRAM lets_try2
 
 ____
 
+
+PROGRAM literal_stuff
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  REAL :: b = 3.2
+  INTEGER :: c = 4
+  Char :: d = "hi there!"
+END PROGRAM literal_stuff
+___
+PROGRAM literal_stuff2
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  REAL :: b = 3.2
+  INTEGER :: c = 4
+  Character :: d = "hi there!"
+END PROGRAM literal_stuff2
+
+____
+! A program to test comments and literals
+! A program to test comments and literals
+PROGRAM comments_stuff
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  REAL :: b = 3.2
+  INTEGER :: c = 4
+  Character :: d = "hi there!"
+END PROGRAM comments_stuff
+
+
+
+
+
+
+
 EOF
