@@ -29,36 +29,37 @@ def spacify(text,lst,exclude=['.']):
 def find_token(text):
     Tokens=[] # to add tokens to list
     
-    line=spacify(text,list(Operators.keys())).lower()
-    line=line.replace("\n", " \n ")
-    tokens=[a for a in line.split(' ') if a!=' ' and a !='']
-    for ind,i in enumerate(tokens):
-        tokens[ind]=i.replace('\t','')
+    text=spacify(text,list(Operators.keys())).lower()
+    text=text.replace("\n", " \n ")
+    text_tokens=[a for a in text.split(' ') if a!=' ' and a !='']
+    for ind,i in enumerate(text_tokens):
+        text_tokens[ind]=i.strip() if i !='\n' else i
 
     ind=0
     line=1
-    while ind < len(tokens):
-        tok=tokens[ind]
+    while ind < len(text_tokens):
+        tok=text_tokens[ind]
         if(tok=='\n'):
             line+=1
-            Tokens.append(token(tok,Token_type.newLine,line))
+            if Tokens[-1].token_type!=Token_type.newLine:
+                Tokens.append(token(tok,Token_type.newLine,line))
         elif(re.match(r'^!',tok)):
-            Tokens.append(token(' '.join(tokens[ind:]),ReservedWords[tok]))
-            break
+            globals.comments.append(token(' '.join(text_tokens[ind:text_tokens[ind:].index('\n')+ind]),ReservedWords[tok],line))
+            ind=text_tokens[ind:].index('\n')+ind
         elif(re.match(r'^"|^\'',tok)):
             oind=ind
-            str=tokens[oind]
+            str=text_tokens[oind]
             if re.match(r'^"',tok):
                 str=r'"\s*$'
             else:
                 str=r'\'\s*$'
             
-            while(ind<len(tokens)and not re.search(str,tokens[ind])):
+            while(ind<len(text_tokens)and not re.search(str,text_tokens[ind])):
                 ind+=1
-            if (ind>=len(tokens)):
-                Tokens.append(token(' '.join(tokens[ind:]),Token_type.Error,line))    
+            if (ind>=len(text_tokens)):
+                Tokens.append(token(' '.join(text_tokens[ind:]),Token_type.Error,line))    
             else:
-                Tokens.append(token(' '.join(tokens[oind:ind+1]),Token_type.Literal,line))
+                Tokens.append(token(' '.join(text_tokens[oind:ind+1]),Token_type.Literal,line))
             
         elif tok in ReservedWords:
             Tokens.append(token(tok,ReservedWords[tok],line))

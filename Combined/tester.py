@@ -34,7 +34,7 @@ if __name__ == "__main__":
     """GUI TO Test Phase 2"""
     
     
-    globals.dtDa2,globals.dtDa1=None,None
+    globals.errorsScreen,globals.dtDa1=None,None
     tests=get_tests(os.path.join(os.path.dirname(__file__), '..\\parser\\FORTRAN_testcases.txt'))
     trees=[]
     for i,test in enumerate(tests):
@@ -65,12 +65,12 @@ if __name__ == "__main__":
                 print(line)
             print()
             df1=pandas.DataFrame(globals.errors)
-            dtDa2 = tk.Toplevel()
-            dtDa2.geometry("800x800")
-            dtDa2.title(test.split(' ')[1])
-            dtDaPT2 = pt.Table(dtDa2, dataframe=df1, showtoolbar=True, showstatusbar=True,maxcellwidth=800,cols=1)
-            dtDaPT2.columnwidths[0]=800
-            dtDaPT2.show()
+            errorsScreen = tk.Toplevel()
+            errorsScreen.geometry("800x800")
+            errorsScreen.title(test.split(' ')[1])
+            errorsTable = pt.Table(errorsScreen, dataframe=df1, showtoolbar=True, showstatusbar=True,maxcellwidth=800,cols=1)
+            errorsTable.columnwidths[0]=800
+            errorsTable.show()
 
     draw_trees(*trees)
     

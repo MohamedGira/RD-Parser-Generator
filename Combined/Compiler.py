@@ -8,7 +8,7 @@ import pandastable as pt
 from nltk.tree import *
 from Tokens.TokenTypes import *
 import globals
-from parser.generatedparstcodeDevTry999 import *
+from parser.generatedparstcodeDevTry11 import *
 
 from scanner.scanner import find_token,token
 from DFA_Generator import DFA_dict
@@ -48,11 +48,7 @@ if __name__ == "__main__":
         arr=[t.to_dict() for t in globals.Tokens]
         df=pandas.DataFrame.from_records([t.to_dict() for t in globals.Tokens])    
         table.model.df=df
-    
         table.show()
-
-        
-        df=pandas.DataFrame.from_records([t.to_dict() for t in globals.Tokens])
         
         
         if(neeew):
@@ -144,18 +140,29 @@ if __name__ == "__main__":
         table.show()
         
         try:
-            globals.dtDa2.destroy()
+            globals.errorsWindow.destroy()
         except:
             pass
         finally:
         # to display errorlist
             df1=pandas.DataFrame(globals.errors)
-            globals.dtDa2 = tk.Toplevel()
-            globals.dtDa2.title('Error List')
-            globals.dtDaPT2 = pt.Table(globals.dtDa2, dataframe=df1, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
-            globals.dtDaPT2.show()
+            globals.errorsWindow = tk.Toplevel()
+            globals.errorsWindow.title('Error List')
+            errorsTable = pt.Table(globals.errorsWindow, dataframe=df1, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
+            errorsTable.show()
+        try:
+            globals.commentsWindow.destroy()
+        except:
+            pass
+        finally:
+        # to display comments list
+
+            globals.commentsWindow = tk.Toplevel()
+            globals.commentsWindow.title('Comments List')
+            commentsDf=pandas.DataFrame.from_records([t.to_dict() for t in globals.comments])    
+            commentsTable= pt.Table(globals.commentsWindow, dataframe=commentsDf, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
+            commentsTable.show()
         Node.draw()
-        
         
         
 
