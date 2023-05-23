@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     entry1 = tk.Text(root) 
     canvas1.create_window(WIDTH/2, 300, window=entry1)
-    globals.dtDa2,globals.dtDa1=None,None
+    globals.errorsScreen,globals.dtDa1=None,None
     def Scan():
         globals.errors=[]
         x1 = entry1.get('1.0', 'end-1c')
@@ -57,16 +57,16 @@ if __name__ == "__main__":
             Node=Parse(0,globals.Tokens)["node"]
         
         try:
-            globals.dtDa2.destroy()
+            globals.errorsScreen.destroy()
         except:
             pass
         finally:
         # to display errorlist
             df1=pandas.DataFrame(globals.errors)
-            globals.dtDa2 = tk.Toplevel()
-            globals.dtDa2.title('Error List')
-            globals.dtDaPT2 = pt.Table(globals.dtDa2, dataframe=df1, showtoolbar=True, showstatusbar=True)
-            globals.dtDaPT2.show()
+            globals.errorsScreen = tk.Toplevel()
+            globals.errorsScreen.title('Error List')
+            globals.errorsTable = pt.Table(globals.errorsScreen, dataframe=df1, showtoolbar=True, showstatusbar=True)
+            globals.errorsTable.show()
         Node.draw()
 
 
