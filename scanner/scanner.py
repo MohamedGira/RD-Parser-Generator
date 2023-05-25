@@ -7,60 +7,52 @@ import re
 from pandastable import Table
 from Tokens.TokenTypes import *
 import pandas
-from DFA_Generator import DFA_dict
+from DFA.DFA_Generator import DFA_dict
 
-from grapher import *
+from DFA.grapher import *
 
 
     
 #Reserved word Dictionary
 
 
-def spacify(text,lst,exclude=['.']):
-
-    for i in lst  :
-        if i not in exclude:
-            text=text.replace(f'{i}',f' {i} ')
-            for i in [longel for longel in lst if len(longel)>1]:
-                text=text.replace('  '.join([*i]),i)
-              
-    return text
 
 def find_token(text):
+    globals.Tokens=[]
+    globals.errors=[]
+    globals.comments=[]
+
+    globals.errors_lexemes=[]
     Tokens=[] # to add tokens to list
     
-    text=spacify(text,list(Operators.keys())).lower()
-    text=text.replace("\n", " \n ")
-    text_tokens=[a for a in text.split(' ') if a!=' ' and a !='']
-    for ind,i in enumerate(text_tokens):
-        text_tokens[ind]=i.strip() if i !='\n' else i
-
+    text=text.lower()
+    
+    #split text into tokens using regex delimiters
+    text_tokens=[i for i in re.split(r'(\s|!.*|\n|\'.*\'|\".*\"|\(|\)|\{\}|\,|\/|\;|\:\:|\*|\+|\=\=|\-|\>\=|\<\=|\/\=|\>|\<|\=)', text) if i.strip() or i=='\n']
+    text_tokens=[i.strip() if i!="\n" else i for i in text_tokens ]
     ind=0
     line=1
+
+    #assign token type to each token
     while ind < len(text_tokens):
         tok=text_tokens[ind]
-        if(tok=='\n'):
-            line+=1
-            if Tokens[-1].token_type!=Token_type.newLine:
+        if('\n' in tok):
+            if len(Tokens) and Tokens[-1].token_type!=Token_type.newLine:
                 Tokens.append(token(tok,Token_type.newLine,line))
+            line+=1
         elif(re.match(r'^!',tok)):
-            globals.comments.append(token(' '.join(text_tokens[ind:text_tokens[ind:].index('\n')+ind]),ReservedWords[tok],line))
-            ind=text_tokens[ind:].index('\n')+ind
+            globals.comments.append(token(tok,Token_type.Comment,line))
         elif(re.match(r'^"|^\'',tok)):
             oind=ind
-            str=text_tokens[oind]
-            if re.match(r'^"',tok):
+            str=text_tokens[oind][0]  
+            if str=='"':
                 str=r'"\s*$'
             else:
                 str=r'\'\s*$'
-            
-            while(ind<len(text_tokens)and not re.search(str,text_tokens[ind])):
-                ind+=1
-            if (ind>=len(text_tokens)):
-                Tokens.append(token(' '.join(text_tokens[ind:]),Token_type.Error,line))    
+            if re.search(str,tok):
+                Tokens.append(token(tok,Token_type.Literal,line))
             else:
-                Tokens.append(token(' '.join(text_tokens[oind:ind+1]),Token_type.Literal,line))
-            
+                Tokens.append(token(' '.join(text_tokens[ind:]),Token_type.Error,line))    
         elif tok in ReservedWords:
             Tokens.append(token(tok,ReservedWords[tok],line))
         elif tok in Operators:
@@ -75,25 +67,12 @@ def find_token(text):
             Tokens.append(token(tok,Token_type.Error,line))
             globals.errors.append(f'Lexical Error at line {line }: {tok} is not a valid token')
         ind+=1
-      
+    
     return Tokens
        
     # complete 
        
     pass
-import re
-
-pattern = r'^[+-]?\d+$'
-integer_regex = re.compile(pattern)
-
-# Test some sample inputs
-inputs = ["42", "-123", "0", "+999", "abc", "3.14"]
-for input_str in inputs:
-    if integer_regex.match(input_str):
-        print(f"{input_str} is a valid integer.")
-    else:
-        print(f"{input_str} is not a valid integer.")
-
 
 
 #GUI
