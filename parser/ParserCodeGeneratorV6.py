@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.append("D:\Materials\compilers\project\Lexical-Analyser\\")  # Adds the parent directory to the sys.path
 from Tokens.TokenTypes import *
-
+import globals
 def get_lower_dict(enum):
     d={}
     enum_keys = list(enum.__members__.keys())
@@ -213,7 +213,8 @@ def generate_parse_functions(rules):
                             s=add_line(s,f'   return out')
                         else:
                             s=add_line(s,' else:')
-                            s=add_line(s,f'     print("souldn\'t reach here")')
+                            if(len(globals.Tokens)>ind):
+                                s=add_line(s,f'     globals.errors.append(f"Syntax error at line {globals.Tokens[ind]["Line"]}:  Expected <{function_name.lower()}> found ` {globals.Tokens[ind]["token_type"]} `")')
                             s=add_line(s,f'     out["mode"]=["error"]')
                             s=add_line(s,f'     out["node"]=["error"]')
                             s=add_line(s,f'     out["index"]=ind')
@@ -233,7 +234,9 @@ sss=add_line(sss,'from Tokens.TokenTypes import *')
 sss=add_line(sss,'from nltk.tree import *')
 sss=add_line(sss,'neeew=1')
 
-write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry11.py'),sss,False)
+
+output_file='generatedparstcodeDevTry12.py'
+write_to(os.path.join(os.path.dirname(__file__),output_file),sss,False)
 
 
 
@@ -241,10 +244,10 @@ secs=extract_section(os.path.join(os.path.dirname(__file__),'Grammer.txt'))
 for i in secs:
     functions=generate_parse_functions(i.grammer)
     fname='separate\\'+i.name[1:-1]
-    write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry11.py'),f'\n{i.name}',False)
+    write_to(os.path.join(os.path.dirname(__file__),output_file),f'\n{i.name}',False)
     for i in functions:
-        write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry11.py'),i,False)
-        write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry11.py'),'\n',False)
+        write_to(os.path.join(os.path.dirname(__file__),output_file),i,False)
+        write_to(os.path.join(os.path.dirname(__file__),output_file),'\n',False)
 
 
 
@@ -266,8 +269,6 @@ s=add_line(s,"        if position==0:")
 s=add_line(s,"            arr.append(Match(match,j))")
 s=add_line(s,"        else:")
 s=add_line(s,"            arr.append(Match(match,arr[-1]['index']))")
-#s=add_line(s,"    if(is_there_error(arr)):")
-#s=add_line(s,"        print(f'{match} != {globals.Tokens[j].lex} ')")
 s=add_line(s,"    return arr")
 s=add_line(s,'def MatchArr(Arr,ind,appendToError):')
 s=add_line(s,'  for i in Arr:')
@@ -285,7 +286,6 @@ s=add_line(s,'        arr=fillmatch(arr,match,i,ind)')
 s=add_line(s,'        ind=arr[-1]["index"]')
 s=add_line(s,'        Children.append(arr[-1]["node"])')
 s=add_line(s,'        if is_there_error(arr):')
-#s=add_line(s,"            print(f'error at {func_name}','at',globals.Tokens[ind].lex,'at',ind,'at',globals.Tokens[ind].token_type)")
 s=add_line(s,'            while ind<len(globals.Tokens) and globals.Tokens[ind].lex!="\\n" :')
 s=add_line(s,'                ind+=1')
 s=add_line(s,'            arr[-1]["index"]=ind')
@@ -322,4 +322,4 @@ s=add_line(s,'    else:')
 s=add_line(s,'        output["node"]=["error"]')
 s=add_line(s,'        output["index"]=j')
 s=add_line(s,'        return output')
-write_to(os.path.join(os.path.dirname(__file__),f'generatedparstcodeDevTry11.py'),s,False)
+write_to(os.path.join(os.path.dirname(__file__),output_file),s,False)
