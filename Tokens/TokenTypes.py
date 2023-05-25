@@ -48,6 +48,7 @@ class Token_type(Enum): # listing all tokens type
     Write=42
     ConstantI=43
     ConstantR=44
+    Len=45
 
 
 
@@ -70,6 +71,7 @@ ReservedWords={
             "print":Token_type.Print,
             "read":Token_type.Read,
             "!":Token_type.Comment,
+            'len':Token_type.Len,
             
             }
 Operators={
@@ -95,12 +97,7 @@ Operators={
           }
 
 
-def get_lower_dict(enum):
-    d={}
-    enum_keys = list(enum.__members__.keys())
-    for key in enum_keys:
-        d[key.lower()]=enum[key]
-    return d
+
 
 
 class token:
