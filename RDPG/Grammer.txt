@@ -1,0 +1,29 @@
+
+#lisp
+
+<Program> → <Lists>
+<Lists> → <List> <Lists_dash>
+<Lists_dash> → <List> <Lists_dash> | ε
+<List> → [openParenthesis] <Contents> [closeParenthesis]
+<Contents> → <Content> <Contents_dash>
+<Contents_dash> → <Content> <Contents_dash> | ε
+<Content> → <List> | <Block> | <Expression> | ε
+<Block> → [Dotimes] [openParenthesis] [identifier] [number] [closeParenthesis] <Lists> | [when] [openParenthesis] <Expression> [closeParenthesis] <Lists>   
+<Expression> → <Function> | [logicalTrue] | [logicalFalse]
+<Function> →  <UnaryFunction> | <BinaryFunction> | <OtherFunction> | [read]
+<UnaryFunction> → <UnaryFunctionName> <Value>
+<UnaryFunctionName> → <UnaryOperator> | [write] | [sin] | [cos] | [tan] 
+<BinaryFunction> → <SetqFunction> | <BinaryOperatorFunction>
+<SetqFunction> → [setq] [identifier] <Value>
+<BinaryOperatorFunction> → <BinaryOperator> <Value> <Value>
+<OtherFunction> → [identifier] <Parameters>
+<UnaryOperator> → [incrementOp] | [decrementOp]
+<BinaryOperator> → [plusOp] | [minusOp] | [multiplyOp] | [divideOp] | [modOp] | [remOp] | [greaterThanOrEqualOp] | [lessThanOrEqualOp] | [greaterThanOp] | [lessThanOp] | [EqualOp] | [notEqualOp]
+<Parameters> → <Value> <Parameters_dash> | ε
+<Parameters_dash> → <Value> <Parameters_dash> | ε
+<Value> → <Atom> | <Function> | [logicalTrue] | [logicalFalse] | [string] 
+<Atom> → [identifier] | [number]
+
+
+___
+EOF

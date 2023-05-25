@@ -12,12 +12,16 @@ ___________
 <declarations> -> <constant_declarations>  <variable_declarations> | ε
 
 <constant_declarations> ->  <constant_declaration> <constant_declarations_dash> | ε
-<constant_declaration> -> <type> [,] [PARAMETER] [::] [IDENTIFIER] [=] <number> [NEWLINE] | ε
+<constant_declaration> -> <type> [,] [PARAMETER] [::] [IDENTIFIER] [=] <right_hand_side>  [NEWLINE] | ε
 <constant_declarations_dash> ->  <constant_declarations> | ε
 
 <variable_declarations> -> <variable_declaration>  <variable_declarations_dash> | ε
-<variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> [NEWLINE] | ε
-<equals_something> -> [=] <number> | ε
+<variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> <extra_var> [NEWLINE] | ε
+<extra_var> -> [,] [IDENTIFIER] <extra_var_dash> | ε
+<extra_var_dash> -> <extra_var> | ε
+<equals_something> -> [=] <right_hand_side> | ε
+<right_hand_side> -> <number> | [literal]
+
 <variable_declarations_dash> ->  <variable_declarations> | ε
 
 ______________________
@@ -42,7 +46,9 @@ ______________________
 <else_statement> -> [ELSE] [NEWLINE] <statements> | ε
  
 
-<do_loop_statement> -> [DO] [IDENTIFIER] [=] <sss> [,] <sss> <step> [NEWLINE] <statements> [END] [DO] [NEWLINE]
+<do_loop_statement> -> [DO] <loop_nums> [NEWLINE] <statements> [END] [DO] [NEWLINE]
+
+<loop_nums> -> [IDENTIFIER] [=] <sss> [,] <sss> <step> | ε
 
 <sss> -> [ConstantI] | [IDENTIFIER]
 
@@ -73,7 +79,7 @@ ___________
 <relational_operator> -> [>] | [<] | [<=] | [>=] | [==] | [/=]
 
 
-<expression> -> <term> <expression_dash>
+<expression> -> <term> <expression_dash> | [literal]
 
 <expression_dash> -> <additive_operator> <term> <expression_dash> | ε
 

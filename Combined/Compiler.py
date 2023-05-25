@@ -8,10 +8,10 @@ import pandastable as pt
 from nltk.tree import *
 from Tokens.TokenTypes import *
 import globals
-from parser.generatedparstcodeDevTry999 import *
+from parser.generatedParseCode import *
 
 from scanner.scanner import find_token,token
-from DFA_Generator import DFA_dict
+from DFA.DFA_Generator import DFA_dict
 import time
 import os
 
@@ -48,11 +48,7 @@ if __name__ == "__main__":
         arr=[t.to_dict() for t in globals.Tokens]
         df=pandas.DataFrame.from_records([t.to_dict() for t in globals.Tokens])    
         table.model.df=df
-    
         table.show()
-
-        
-        df=pandas.DataFrame.from_records([t.to_dict() for t in globals.Tokens])
         
         
         if(neeew):
@@ -61,7 +57,77 @@ if __name__ == "__main__":
             Node=Parse(0,globals.Tokens)["node"]
         
         
+        def on_click_comments(event):
+            # Define the third section with an image
+            try:
+                globals.frame3.destroy()
+            except Exception as e:
+                print(str(e))
+                
+            finally:
+                globals.frame3 = tk.Toplevel()
+                # Set the window size
+                
+                globals.frame3.geometry(f"{window_width}x{window_height}")
+            
+                label3 = tk.Label(globals.frame3)
+                label3.pack()
+                fpath='dne.gif'
+            
+            globals.frames.clear()
+            selected_item = commentsTable.get_row_clicked(event)
+            lex=commentsTable.model.df.iloc[selected_item,0]
+            token_type=commentsTable.model.df.iloc[selected_item,2]
+            globals.frame3.title(f'{lex}')
+            fpath=DFA_dict[token_type].try_word(lex)
+            with Image.open(fpath) as image:
+                for i in range(image.n_frames):
+                    width, height = image.size
+                    aspect_ratio = width / height
+                    
+                   
+                    # Resize the image while maintaining aspect ratio
+                    aspect_ratio = image.width / image.height
+                    window_ratio = window_width / window_height
 
+                    if window_ratio > aspect_ratio:
+                        # Fit the image height to the window height
+                        new_height = window_height
+                        new_width = int(new_height * aspect_ratio)
+                    else:
+                        # Fit the image width to the window width
+                        new_width = window_width
+                        new_height = int(new_width / aspect_ratio)
+                    print(new_height,new_width,window_width,window_height)
+                    image.seek(i)
+                    resized_image = image.resize((new_width, new_height),resample=Image.ANTIALIAS)
+                    tk_image = ImageTk.PhotoImage(resized_image)
+                    globals.frames.append(tk_image)
+            os.remove(fpath)
+            
+        
+            def update_frame(frame_number):               
+                
+                image=globals.frames[frame_number%len(globals.frames)]
+                
+                if len(globals.frames)>0:
+                    label3.config(image=image)
+            import threading
+            def animate():
+                i=0
+                while True:
+                    time.sleep(0.8)
+                    try:
+                        root.after(0, update_frame, i)
+                    except:
+                        pass
+                    i+=1
+            t1 = threading.Thread(target=animate)
+            try:
+                t1.start()
+            except:
+                pass
+        
 
         
         
@@ -86,10 +152,6 @@ if __name__ == "__main__":
             selected_item = table.get_row_clicked(event)
             lex=table.model.df.iloc[selected_item,0]
             token_type=table.model.df.iloc[selected_item,2]
-            globals.frame3.title('loading')
-            time.sleep(.2)
-            globals.frame3.title('almost there')
-            time.sleep(.2)
             globals.frame3.title(f'{lex}')
             fpath=DFA_dict[token_type].try_word(lex)
             with Image.open(fpath) as image:
@@ -144,18 +206,31 @@ if __name__ == "__main__":
         table.show()
         
         try:
-            globals.dtDa2.destroy()
+            globals.errorsWindow.destroy()
         except:
             pass
         finally:
         # to display errorlist
             df1=pandas.DataFrame(globals.errors)
-            globals.dtDa2 = tk.Toplevel()
-            globals.dtDa2.title('Error List')
-            globals.dtDaPT2 = pt.Table(globals.dtDa2, dataframe=df1, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
-            globals.dtDaPT2.show()
+            globals.errorsWindow = tk.Toplevel()
+            globals.errorsWindow.title('Error List')
+            errorsTable = pt.Table(globals.errorsWindow, dataframe=df1, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
+            errorsTable.show()
+        try:
+            globals.commentsWindow.destroy()
+        except:
+            pass
+        finally:
+        # to display comments list
+
+            globals.commentsWindow = tk.Toplevel()
+            globals.commentsWindow.title('Comments List')
+            commentsDf=pandas.DataFrame.from_records([t.to_dict() for t in globals.comments])    
+            commentsTable= pt.Table(globals.commentsWindow, dataframe=commentsDf, showtoolbar=True,maxcellwidth=800,cols=1, showstatusbar=True)
+            commentsTable.show()
+            commentsTable.bind('<ButtonRelease-1>', on_click_comments)
+
         Node.draw()
-        
         
         
 

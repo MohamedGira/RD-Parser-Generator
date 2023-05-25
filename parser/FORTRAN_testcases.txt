@@ -1,3 +1,25 @@
+
+program Fibonacci
+   implicit none
+    integer :: f1,f2,f3,i
+    i = 1
+    f1 = 0
+    f2 = 1
+    do
+        f3 = f2 + f1
+        f1 = f2
+        f2 = f3
+        i = i + 1
+        if (f1<10) then
+            print* ,'(I1, A, $)', f1, 
+        else
+            print* , '(I3, A, $)', f1, 
+        end if
+    end do
+    print *, '...'
+    end program Fibonacci
+___
+
 PROGRAM constants_and_variables
   IMPLICIT NONE
   REAL, PARAMETER :: pi = 3.14
@@ -143,5 +165,126 @@ PROGRAM lets_try2
 END PROGRAM lets_try2
 
 ____
+
+
+PROGRAM literal_stuff
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  REAL :: b = 3.2
+  INTEGER :: c = 4
+  Char :: d = "hi there!"
+END PROGRAM literal_stuff
+___
+PROGRAM literal_stuff2
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  REAL :: b = 3.2
+  INTEGER :: c = 4
+  Character :: d = "hi there!"
+END PROGRAM literal_stuff2
+
+____
+! A program to test comments and literals
+! A program to test comments and literals
+PROGRAM comments_stuff
+  IMPLICIT NONE
+  INTEGER :: a = 2
+  REAL :: b = 3.2
+  INTEGER :: c = 4
+  Character :: d = "hi there!"
+END PROGRAM comments_stuff
+
+
+
+
+__
+Program myTest
+IMPLICIT NONE 
+
+CHARACTER :: str = 'C'
+CHARACTER (LEN = 4) :: strlong = 'abcd'
+PRINT*, str
+PRINT*, strlong
+
+End Program myTest
+__
+
+Program myTest
+IMPLICIT NONE 
+
+CHARACTER (LEN = 4) :: str = 'abcd'
+PRINT*, str
+
+End Program myTest
+__
+
+
+Program FullTest
+IMPLICIT NONE 
+
+REAL, PARAMETER :: pi = 3.14
+INTEGER, PARAMETER :: C = 3
+
+REAL :: x = 5
+INTEGER :: y = 0
+
+y = x+x*x-x
+
+IF (2<1) THEN
+PRINT*, "IF is working"
+ELSE
+PRINT*, "ELSE is working"
+END IF
+
+DO i = 1,5,2
+PRINT*, "DO is working", i
+END DO 
+
+READ*, y
+PRINT*, y
+
+End Program FullTest
+__
+
+program nestedIfProg
+implicit none
+   ! local variable declaration
+   integer :: a = 100
+ 
+   ! check the logical condition using if statement
+   if( a == 100 ) then
+  
+   ! if condition is true then check the following 
+      
+   if( b == 200 ) then
+  
+   ! if inner if condition is true 
+   print*, "Value of a is 100 and b is 200" 
+  
+   end if
+   end if
+   
+   print*, "exact value of a is " ,  a
+   print*, "exact value of b is " ,  b
+ 
+end program nestedIfProg
+_
+
+__
+program long_char_const_and_var
+implicit none
+   ! constants declirations
+   character (len = 8) , parameter :: a = 'hello!'
+   ! local variable declaration
+   integer :: a = 100
+   character :: a = 'h'
+   character (len = 8) :: a = 'hello!'
+      
+   print*, "exact value of a is " ,  a
+   print*, "exact value of b is " ,  b
+end program long_char_const_and_var
+
+
+__
 
 EOF

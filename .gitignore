@@ -6,6 +6,7 @@ playground.py
 playground/
 outputs/
 parser/Trash/
+parser/versions/
 parser/separate/
 __pycache__/
 */**/__pycache__/

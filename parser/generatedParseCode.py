@@ -20,7 +20,8 @@ def body (ind):
 #declaration
 def declarations (ind):
  out={}
- if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+     
      matches=[constant_declarations,variable_declarations]
      return applyfills(matches,ind,"declarations")
  else:
@@ -30,7 +31,8 @@ def declarations (ind):
 
 def constant_declarations (ind):
  out={}
- if Match(Token_type.Comma,ind+1,False)["node"]!=["error"]:
+ if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False)\
+    or MatchArr([Token_type.Character],ind,False) and Match(Token_type.OpenParan,ind+1,False)["node"]!=["error"] and  Match(Token_type.Comma,ind+6,False)["node"]!=["error"]:
      matches=[constant_declaration,constant_declarations_dash]
      return applyfills(matches,ind,"constant_declarations")
  else:
@@ -40,9 +42,10 @@ def constant_declarations (ind):
 
 def constant_declaration (ind):
  out={}
- if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
-     matches=[type,Token_type.Comma,Token_type.Parameter,Token_type.Scopeop,Token_type.Identifier,Token_type.Equalop,number,Token_type.newLine]
-     return applyfills(matches,ind,"constant_declaration")
+ if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False)\
+    or MatchArr([Token_type.Character],ind,False) and Match(Token_type.OpenParan,ind+1,False)["node"]!=["error"] and  Match(Token_type.Comma,ind+6,False)["node"]!=["error"]:
+    matches=[type,Token_type.Comma,Token_type.Parameter,Token_type.Scopeop,Token_type.Identifier,Token_type.Equalop,right_hand_side,Token_type.newLine]
+    return applyfills(matches,ind,"constant_declaration")
  else:
    out["node"]=Tree("constant_declaration",["ε"])
    out["index"]=ind
@@ -50,7 +53,9 @@ def constant_declaration (ind):
 
 def constant_declarations_dash (ind):
  out={}
- if Match(Token_type.Comma,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False) and Match(Token_type.Comma,ind+1,False)["node"]!=["error"]\
+    or Match(Token_type.Comma,ind+6,False)["node"]!=["error"] and Match(Token_type.OpenParan,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Character],ind,False):
      matches=[constant_declarations]
      return applyfills(matches,ind,"constant_declarations_dash")
  else:
@@ -60,7 +65,8 @@ def constant_declarations_dash (ind):
 
 def variable_declarations (ind):
  out={}
- if Match(Token_type.Scopeop,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False) and Match(Token_type.Scopeop,ind+1,False)["node"]!=["error"]\
+    or Match(Token_type.Scopeop,ind+6,False)["node"]!=["error"] and Match(Token_type.OpenParan,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Character],ind,False):
      matches=[variable_declaration,variable_declarations_dash]
      return applyfills(matches,ind,"variable_declarations")
  else:
@@ -68,29 +74,70 @@ def variable_declarations (ind):
    out["index"]=ind
    return out
 
+
+
+
+
 def variable_declaration (ind):
  out={}
- if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character,],ind,False):
-     matches=[type,Token_type.Scopeop,Token_type.Identifier,equals_something,Token_type.newLine]
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+     matches=[type,Token_type.Scopeop,Token_type.Identifier,equals_something,extra_var,Token_type.newLine]
      return applyfills(matches,ind,"variable_declaration")
  else:
    out["node"]=Tree("variable_declaration",["ε"])
    out["index"]=ind
    return out
 
+def extra_var (ind):
+ out={}
+ if Match(Token_type.Comma,ind,False)["node"]!=["error"]:
+     matches=[Token_type.Comma,Token_type.Identifier,extra_var_dash]
+     return applyfills(matches,ind,"extra_var")
+ else:
+   out["node"]=Tree("extra_var",["ε"])
+   out["index"]=ind
+   return out
+
+def extra_var_dash (ind):
+ out={}
+ if Match(Token_type.Comma,ind,False)["node"]!=["error"]:
+     matches=[extra_var]
+     return applyfills(matches,ind,"extra_var_dash")
+ else:
+   out["node"]=Tree("extra_var_dash",["ε"])
+   out["index"]=ind
+   return out
+
 def equals_something (ind):
  out={}
  if Match(Token_type.Equalop,ind,False)["node"]!=["error"]:
-     matches=[Token_type.Equalop,number]
+     matches=[Token_type.Equalop,right_hand_side]
      return applyfills(matches,ind,"equals_something")
  else:
    out["node"]=Tree("equals_something",["ε"])
    out["index"]=ind
    return out
 
+def right_hand_side (ind):
+ out={}
+ if MatchArr([Token_type.ConstantI,Token_type.ConstantR],ind,False):
+     matches=[number]
+     return applyfills(matches,ind,"right_hand_side")
+ elif Match(Token_type.Literal,ind,False)["node"]!=["error"]:
+     matches=[Token_type.Literal]
+     return applyfills(matches,ind,"right_hand_side")
+ else:
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
+     out["mode"]=["error"]
+     out["node"]=["error"]
+     out["index"]=ind
+     return out
+
 def variable_declarations_dash (ind):
  out={}
- if Match(Token_type.Scopeop,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False):
+ if MatchArr([Token_type.Integer,Token_type.Real,Token_type.Character],ind,False) and Match(Token_type.Scopeop,ind+1,False)["node"]!=["error"]\
+    or Match(Token_type.Scopeop,ind+6,False)["node"]!=["error"] and Match(Token_type.OpenParan,ind+1,False)["node"]!=["error"] and MatchArr([Token_type.Character],ind,False):
      matches=[variable_declarations]
      return applyfills(matches,ind,"variable_declarations_dash")
  else:
@@ -125,7 +172,8 @@ def statement (ind):
      matches=[input_output_statement]
      return applyfills(matches,ind,"statement")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -163,9 +211,19 @@ def else_statement (ind):
 
 def do_loop_statement (ind):
  out={}
- matches=[Token_type.Do,Token_type.Identifier,Token_type.Equalop,sss,Token_type.Comma,sss,step,Token_type.newLine,statements,Token_type.End,Token_type.Do,Token_type.newLine]
+ matches=[Token_type.Do,loop_nums,Token_type.newLine,statements,Token_type.End,Token_type.Do,Token_type.newLine]
  return applyfills(matches,ind,"do_loop_statement")
 
+def loop_nums (ind):
+ out={}
+ if Match(Token_type.Identifier,ind,False)["node"]!=["error"]:
+     matches=[Token_type.Identifier,Token_type.Equalop,sss,Token_type.Comma,sss,step]
+     return applyfills(matches,ind,"loop_nums")
+ else:
+   out["node"]=Tree("loop_nums",["ε"])
+   out["index"]=ind
+   return out
+ 
 def sss (ind):
  out={}
  if Match(Token_type.ConstantI,ind,False)["node"]!=["error"]:
@@ -175,7 +233,8 @@ def sss (ind):
      matches=[Token_type.Identifier]
      return applyfills(matches,ind,"sss")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -202,7 +261,8 @@ def input_output_statement (ind):
      matches=[input_statement]
      return applyfills(matches,ind,"input_output_statement")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -277,7 +337,8 @@ def relational_operator (ind):
      matches=[Token_type.Notequalop]
      return applyfills(matches,ind,"relational_operator")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -325,7 +386,8 @@ def factor (ind):
      matches=[Token_type.OpenParan,expression,Token_type.CloseParan]
      return applyfills(matches,ind,"factor")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -340,7 +402,8 @@ def additive_operator (ind):
      matches=[Token_type.Minusop]
      return applyfills(matches,ind,"additive_operator")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -355,7 +418,8 @@ def multiplicative_operator (ind):
      matches=[Token_type.Divideop]
      return applyfills(matches,ind,"multiplicative_operator")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -372,14 +436,30 @@ def type (ind):
      matches=[Token_type.Real]
      return applyfills(matches,ind,"type")
  elif Match(Token_type.Character,ind,False)["node"]!=["error"]:
-     matches=[Token_type.Character]
+     matches=[character]
      return applyfills(matches,ind,"type")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
      return out
+
+def character (ind):
+ out={}
+ matches=[Token_type.Character,longchar]
+ return applyfills(matches,ind,"character")
+
+def longchar (ind):
+ out={}
+ if Match(Token_type.OpenParan,ind,False)["node"]!=["error"]:
+     matches=[Token_type.OpenParan,Token_type.Len,Token_type.Equalop,Token_type.ConstantI,Token_type.CloseParan]
+     return applyfills(matches,ind,"longchar")
+ else:
+   out["node"]=Tree("longchar",["ε"])
+   out["index"]=ind
+   return out
 
 def number (ind):
  out={}
@@ -390,7 +470,8 @@ def number (ind):
      matches=[Token_type.ConstantR]
      return applyfills(matches,ind,"number")
  else:
-     print("souldn't reach here")
+     globals.errors.append(f"Syntax error at line {globals.Tokens[ind].line}:  Expected {'sth'} found ` {globals.Tokens[ind].token_type} `")
+     globals.errors_lexemes.append(f"{globals.Tokens[ind].lex}")
      out["mode"]=["error"]
      out["node"]=["error"]
      out["index"]=ind
@@ -457,7 +538,8 @@ def Match(a,j,report=True):
             output["node"]=["error"]
             output["index"]=j
             if(report):
-                globals.errors.append(f"Syntax error at line {Temp['Line']}:  Expected {a} found ` {Temp['Lex']} `")
+                globals.errors.append(f"Syntax error at line {Temp['Line']}:  Expected {a} found ` {Temp['token_type']} `")
+                globals.errors_lexemes.append(f"{Temp['Lex']}")
             return output
     else:
         output["node"]=["error"]

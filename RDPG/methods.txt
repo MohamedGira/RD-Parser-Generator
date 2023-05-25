@@ -1,0 +1,67 @@
+def is_there_error(arr):
+    return 'mode' in arr[-1].keys() and arr[-1]['mode']==['error']
+    
+def fillmatch(arr,match,position,j):
+    if(callable(match)):
+        if position==0:
+            arr.append(match(j))
+        else:
+            arr.append(match(arr[-1]['index']))
+    else:
+        if position==0:
+            arr.append(Match(match,j))
+        else:
+            arr.append(Match(match,arr[-1]['index']))
+    return arr
+def MatchArr(Arr,ind,appendToError):
+  for i in Arr:
+    if Match(i,ind,appendToError)["node"]!=["error"]:
+      return True
+  return False
+def applyfills(matches,ind,func_name):
+    arr=[]
+    out={}
+    Children=[]
+    i=0
+    while i< len (matches):
+        match=matches[i]
+        arr=fillmatch(arr,match,i,ind)
+        ind=arr[-1]["index"]
+        Children.append(arr[-1]["node"])
+        if is_there_error(arr):
+            while ind<len(globals.Tokens) and globals.Tokens[ind].lex!="\\n" :
+                ind+=1
+            arr[-1]["index"]=ind
+            if Token_type.newLine in matches[i:]:
+                i=matches[i:].index(Token_type.newLine)+i
+                continue
+            else:
+                out["mode"]=["error"]
+                out["index"]=ind
+                out["node"]=Tree(func_name,Children)
+                return out
+        
+        ind+=1
+        i+=1
+    out["node"]=Tree(func_name,Children)
+    out["index"]=arr[-1]["index"]
+    return out
+def Match(a,j,report=True):
+    output=dict()
+    if(j<len(globals.Tokens)):
+        Temp=globals.Tokens[j].to_dict()
+        if(Temp["token_type"]==a):
+            output["node"]=[Temp["Lex"]]
+            output["index"]=j+1
+            return output
+        else:
+            output["mode"]=["error"]
+            output["node"]=["error"]
+            output["index"]=j
+            if(report):
+                globals.errors.append("Syntax error : "+Temp["Lex"]+F" Expected {a}")
+            return output
+    else:
+        output["node"]=["error"]
+        output["index"]=j
+        return output

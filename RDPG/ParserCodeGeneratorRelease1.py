@@ -1,9 +1,8 @@
 import re
 import sys
 import os
-sys.path.append("D:\Materials\compilers\project\Lexical-Analyser\\")  # Adds the parent directory to the sys.path
-from Tokens.TokenTypes import *
-import globals
+sys.path.append(os.path.dirname(__file__))
+from Tokens import *
 def get_lower_dict(enum):
     d={}
     enum_keys = list(enum.__members__.keys())
@@ -213,8 +212,7 @@ def generate_parse_functions(rules):
                             s=add_line(s,f'   return out')
                         else:
                             s=add_line(s,' else:')
-                            if(len(globals.Tokens)>ind):
-                                s=add_line(s,f'     globals.errors.append(f"Syntax error at line {globals.Tokens[ind]["Line"]}:  Expected <{function_name.lower()}> found ` {globals.Tokens[ind]["token_type"]} `")')
+                            s=add_line(s,f'     print("souldn\'t reach here")')
                             s=add_line(s,f'     out["mode"]=["error"]')
                             s=add_line(s,f'     out["node"]=["error"]')
                             s=add_line(s,f'     out["index"]=ind')
@@ -225,101 +223,22 @@ def generate_parse_functions(rules):
   
     return gens
         
-
-sss=''
-sss=add_line(sss,'import sys')
-sss=add_line(sss,r'sys.path.append("D:\Materials\compilers\project\Lexical-Analyser\\")  # Adds the parent directory to the sys.path')
-sss=add_line(sss,'import globals')
-sss=add_line(sss,'from Tokens.TokenTypes import *')
-sss=add_line(sss,'from nltk.tree import *')
-sss=add_line(sss,'neeew=1')
-
-
-output_file='generatedparstcodeDevTry12.py'
-write_to(os.path.join(os.path.dirname(__file__),output_file),sss,False)
-
+OutputFile='Output.py'
+with open (os.path.join(os.path.dirname(__file__),'imports.txt'),'r') as f:
+    write_to(os.path.join(os.path.dirname(__file__),OutputFile),f.read(),False)
+with open (os.path.join(os.path.dirname(__file__),'Tokens.py'),'r') as f:
+    write_to(os.path.join(os.path.dirname(__file__),OutputFile),f.read(),False)
 
 
 secs=extract_section(os.path.join(os.path.dirname(__file__),'Grammer.txt'))
 for i in secs:
     functions=generate_parse_functions(i.grammer)
     fname='separate\\'+i.name[1:-1]
-    write_to(os.path.join(os.path.dirname(__file__),output_file),f'\n{i.name}',False)
+    write_to(os.path.join(os.path.dirname(__file__),OutputFile),f'\n{i.name}',False)
     for i in functions:
-        write_to(os.path.join(os.path.dirname(__file__),output_file),i,False)
-        write_to(os.path.join(os.path.dirname(__file__),output_file),'\n',False)
-
-
-
+        write_to(os.path.join(os.path.dirname(__file__),OutputFile),i+'\n',False)
 
 
 #utils that he generated functions will need
-s=''
-s=add_line(s,"def is_there_error(arr):")
-s=add_line(s,"    return 'mode' in arr[-1].keys() and arr[-1]['mode']==['error']")
-s=add_line(s,"    ")
-s=add_line(s,"def fillmatch(arr,match,position,j):")
-s=add_line(s,"    if(callable(match)):")
-s=add_line(s,"        if position==0:")
-s=add_line(s,"            arr.append(match(j))")
-s=add_line(s,"        else:")
-s=add_line(s,"            arr.append(match(arr[-1]['index']))")
-s=add_line(s,"    else:")
-s=add_line(s,"        if position==0:")
-s=add_line(s,"            arr.append(Match(match,j))")
-s=add_line(s,"        else:")
-s=add_line(s,"            arr.append(Match(match,arr[-1]['index']))")
-s=add_line(s,"    return arr")
-s=add_line(s,'def MatchArr(Arr,ind,appendToError):')
-s=add_line(s,'  for i in Arr:')
-s=add_line(s,'    if Match(i,ind,appendToError)["node"]!=["error"]:')
-s=add_line(s,'      return True')
-s=add_line(s,'  return False')
-s=add_line(s,'def applyfills(matches,ind,func_name):')
-s=add_line(s,'    arr=[]')
-s=add_line(s,'    out={}')
-s=add_line(s,'    Children=[]')
-s=add_line(s,'    i=0')
-s=add_line(s,'    while i< len (matches):')
-s=add_line(s,'        match=matches[i]')
-s=add_line(s,'        arr=fillmatch(arr,match,i,ind)')
-s=add_line(s,'        ind=arr[-1]["index"]')
-s=add_line(s,'        Children.append(arr[-1]["node"])')
-s=add_line(s,'        if is_there_error(arr):')
-s=add_line(s,'            while ind<len(globals.Tokens) and globals.Tokens[ind].lex!="\\n" :')
-s=add_line(s,'                ind+=1')
-s=add_line(s,'            arr[-1]["index"]=ind')
-s=add_line(s,'            if Token_type.newLine in matches[i:]:')
-s=add_line(s,'                i=matches[i:].index(Token_type.newLine)+i')
-s=add_line(s,'                continue')
-s=add_line(s,'            else:')
-s=add_line(s,'                out["mode"]=["error"]')
-s=add_line(s,'                out["index"]=ind')
-s=add_line(s,'                out["node"]=Tree(func_name,Children)')
-s=add_line(s,'                return out')
-s=add_line(s,'        ')
-s=add_line(s,'        ind+=1')
-s=add_line(s,'        i+=1')
-s=add_line(s,'    out["node"]=Tree(func_name,Children)')
-s=add_line(s,'    out["index"]=arr[-1]["index"]')
-s=add_line(s,'    return out')
-s=add_line(s,'def Match(a,j,report=True):')
-s=add_line(s,'    output=dict()')
-s=add_line(s,'    if(j<len(globals.Tokens)):')
-s=add_line(s,'        Temp=globals.Tokens[j].to_dict()')
-s=add_line(s,'        if(Temp["token_type"]==a):')
-s=add_line(s,'            output["node"]=[Temp["Lex"]]')
-s=add_line(s,'            output["index"]=j+1')
-s=add_line(s,'            return output')
-s=add_line(s,'        else:')
-s=add_line(s,'            output["mode"]=["error"]')
-s=add_line(s,'            output["node"]=["error"]')
-s=add_line(s,'            output["index"]=j')
-s=add_line(s,'            if(report):')
-s=add_line(s,'                globals.errors.append("Syntax error : "+Temp["Lex"]+F" Expected {a}")')
-s=add_line(s,'            return output')
-s=add_line(s,'    else:')
-s=add_line(s,'        output["node"]=["error"]')
-s=add_line(s,'        output["index"]=j')
-s=add_line(s,'        return output')
-write_to(os.path.join(os.path.dirname(__file__),output_file),s,False)
+with open(os.path.join(os.path.dirname(__file__),'methods.txt'),'r')as f:
+    write_to(os.path.join(os.path.dirname(__file__),OutputFile),f.read(),False)
