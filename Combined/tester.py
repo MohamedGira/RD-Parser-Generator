@@ -8,7 +8,7 @@ import pandastable as pt
 from nltk.tree import *
 from Tokens.TokenTypes import *
 import globals
-from parser.generatedparstcodeDevTry11 import *
+from parser.generatedParseCode import *
 from scanner.scanner import find_token,token
 
 
@@ -52,18 +52,32 @@ if __name__ == "__main__":
        
         if(not globals.errors):
             print(f'test {i+1}: Syntax is correct')
+            print('test:___________________________________________________________')
+    
+            print(test)
+            print('_________________________________________________________________')
+
         else:
             if (not Node):
                 print(f'test {i+1}: had lexical errors, it didn\'t enter the parsing process: ({len(globals.errors)} error/s found)')
             else:
                 print(f'test {i+1}: ({len(globals.errors)} error/s found)')
             errorified_test=test.split('\n')
-            for error in globals.errors:
+            
+            
+            for i,error in enumerate(globals.errors):
                 line=error.split(':')[0].split(' ')[-1]
-                errorified_test[int(line)-1]=errorified_test[int(line)-1].replace('\n','')+'\033[0;31m  <--- Error'+ ' '.join(error.split(':')[1:])+' \033[0m'
+                errorified_test[int(line)-1]=errorified_test[int(line)-1].replace('\n',' ')+f' \033[0;31m  <--- Error  {" ".join(error.split(":")[1:])} \033[0m'
+                try:
+                    errorlex=re.compile(globals.errors_lexemes[i],re.IGNORECASE)
+                    errorified_test[int(line)-1]=errorlex.sub(f"\033[0;31m\x1B[4m" + globals.errors_lexemes[i].replace('\n',' ') + "\x1B[0m\033[0m",errorified_test[int(line)-1])
+                except:
+                    pass
+            print('test:___________________________________________________________')
             for line in errorified_test:
                 print(line)
-            print()
+            print('_________________________________________________________________')
+
             df1=pandas.DataFrame(globals.errors)
             errorsScreen = tk.Toplevel()
             errorsScreen.geometry("800x800")

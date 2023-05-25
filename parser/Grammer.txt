@@ -16,7 +16,9 @@ ___________
 <constant_declarations_dash> ->  <constant_declarations> | ε
 
 <variable_declarations> -> <variable_declaration>  <variable_declarations_dash> | ε
-<variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> [NEWLINE] | ε
+<variable_declaration> -> <type> [::] [IDENTIFIER] <equals_something> <extra_var> [NEWLINE] | ε
+<extra_var> -> [,] [IDENTIFIER] <extra_var_dash> | ε
+<extra_var_dash> -> <extra_var> | ε
 <equals_something> -> [=] <right_hand_side> | ε
 <right_hand_side> -> <number> | [literal]
 
@@ -44,7 +46,9 @@ ______________________
 <else_statement> -> [ELSE] [NEWLINE] <statements> | ε
  
 
-<do_loop_statement> -> [DO] [IDENTIFIER] [=] <sss> [,] <sss> <step> [NEWLINE] <statements> [END] [DO] [NEWLINE]
+<do_loop_statement> -> [DO] <loop_nums> [NEWLINE] <statements> [END] [DO] [NEWLINE]
+
+<loop_nums> -> [IDENTIFIER] [=] <sss> [,] <sss> <step> | ε
 
 <sss> -> [ConstantI] | [IDENTIFIER]
 
@@ -75,7 +79,7 @@ ___________
 <relational_operator> -> [>] | [<] | [<=] | [>=] | [==] | [/=]
 
 
-<expression> -> <term> <expression_dash>
+<expression> -> <term> <expression_dash> | [literal]
 
 <expression_dash> -> <additive_operator> <term> <expression_dash> | ε
 
