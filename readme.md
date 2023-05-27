@@ -57,3 +57,6 @@ Operators={
 
 ## Output
 The output of this parser is the Recursive Descent Parsing Code that can be later used to parse the language of the given grammer
+
+## How To Use?
+Check the RDPG folder, add your `Token_type`, `Operators`,and` ReservedWords`, class and dictionaries to Tokens.py, add grammer to `Grammer.txt`, open the release file, run it, and see the magic happens :D
